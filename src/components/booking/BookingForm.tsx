@@ -98,19 +98,19 @@ export function BookingForm({ car, locations }: BookingFormProps) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl border border-white/10 bg-[#111113] p-6"
+      className="rounded-2xl border border-white/10 bg-[#113F67] p-6"
     >
       <div className="mb-6 flex items-baseline justify-between">
         <div>
           <span className="text-2xl font-bold text-white">
             {formatCurrency(car.pricePerDay)}
           </span>
-          <span className="text-sm text-zinc-500"> / day</span>
+          <span className="text-sm text-slate-400"> / day</span>
         </div>
         {totalDays > 0 && (
           <div className="text-right">
-            <p className="text-sm text-zinc-400">{totalDays} days</p>
-            <p className="text-lg font-bold text-[#E8FF00]">
+            <p className="text-sm text-slate-300">{totalDays} days</p>
+            <p className="text-lg font-bold text-[#FDF5AA]">
               {formatCurrency(totalPrice)}
             </p>
           </div>
@@ -120,7 +120,7 @@ export function BookingForm({ car, locations }: BookingFormProps) {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Dates */}
         <div>
-          <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-zinc-400">
+          <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-slate-300">
             <CalendarDays className="h-3.5 w-3.5" />
             Rental Period
           </label>
@@ -154,7 +154,7 @@ export function BookingForm({ car, locations }: BookingFormProps) {
 
         {/* Pickup Location */}
         <div>
-          <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-zinc-400">
+          <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-slate-300">
             <MapPin className="h-3.5 w-3.5" />
             Pickup Location
           </label>
@@ -174,7 +174,7 @@ export function BookingForm({ car, locations }: BookingFormProps) {
 
         {/* Dropoff Location */}
         <div>
-          <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-zinc-400">
+          <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-slate-300">
             <MapPin className="h-3.5 w-3.5" />
             Drop-off Location
           </label>
@@ -196,14 +196,14 @@ export function BookingForm({ car, locations }: BookingFormProps) {
         {totalDays > 0 && (
           <div className="rounded-xl border border-white/5 bg-white/5 p-4 space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-zinc-400">
+              <span className="text-slate-300">
                 {formatCurrency(car.pricePerDay)} × {totalDays} days
               </span>
               <span className="text-white">{formatCurrency(totalPrice)}</span>
             </div>
             <div className="border-t border-white/10 pt-2 flex justify-between font-semibold">
               <span className="text-white">Total</span>
-              <span className="text-[#E8FF00]">{formatCurrency(totalPrice)}</span>
+              <span className="text-[#FDF5AA]">{formatCurrency(totalPrice)}</span>
             </div>
           </div>
         )}
@@ -219,7 +219,7 @@ export function BookingForm({ car, locations }: BookingFormProps) {
         <Button
           type="submit"
           disabled={submitting || !car.available}
-          className="w-full bg-[#E8FF00] text-black font-bold hover:bg-[#d4e800] disabled:opacity-50"
+          className="w-full bg-[#FDF5AA] text-black font-bold hover:bg-[#e8e090] disabled:opacity-50"
           size="lg"
         >
           {submitting ? (
@@ -242,7 +242,7 @@ export function BookingForm({ car, locations }: BookingFormProps) {
           )}
         </Button>
 
-        <p className="text-center text-xs text-zinc-600">
+        <p className="text-center text-xs text-slate-500">
           No charge until confirmed. Free cancellation before pickup.
         </p>
       </form>

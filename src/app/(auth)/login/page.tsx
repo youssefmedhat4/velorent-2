@@ -46,11 +46,11 @@ function LoginForm() {
   };
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-[#111113] p-8">
+    <div className="rounded-2xl border border-white/10 bg-[#113F67] p-8">
       <Button
         type="button"
         variant="outline"
-        className="w-full border-white/10 text-zinc-300 hover:bg-white/5 hover:text-white mb-6"
+        className="w-full border-white/10 text-slate-200 hover:bg-white/5 hover:text-white mb-6"
         onClick={() => {
           setGoogleLoading(true);
           signIn("google", { callbackUrl });
@@ -70,20 +70,20 @@ function LoginForm() {
           <div className="w-full border-t border-white/10" />
         </div>
         <div className="relative flex justify-center text-xs">
-          <span className="bg-[#111113] px-3 text-zinc-500">or continue with email</span>
+          <span className="bg-[#113F67] px-3 text-slate-400">or continue with email</span>
         </div>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <Label className="text-zinc-400">Email</Label>
+          <Label className="text-slate-300">Email</Label>
           <div className="relative mt-1.5">
-            <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+            <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <Input
               {...register("email")}
               type="email"
               placeholder="you@example.com"
-              className="pl-10 border-white/10 bg-white/5 text-white placeholder-zinc-500 focus:border-[#E8FF00]/30"
+              className="pl-10 border-white/10 bg-white/5 text-white placeholder-zinc-500 focus:border-[#FDF5AA]/30"
             />
           </div>
           {errors.email && (
@@ -92,14 +92,14 @@ function LoginForm() {
         </div>
 
         <div>
-          <Label className="text-zinc-400">Password</Label>
+          <Label className="text-slate-300">Password</Label>
           <div className="relative mt-1.5">
-            <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+            <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <Input
               {...register("password")}
               type="password"
               placeholder="••••••••"
-              className="pl-10 border-white/10 bg-white/5 text-white placeholder-zinc-500 focus:border-[#E8FF00]/30"
+              className="pl-10 border-white/10 bg-white/5 text-white placeholder-zinc-500 focus:border-[#FDF5AA]/30"
             />
           </div>
           {errors.password && (
@@ -117,7 +117,7 @@ function LoginForm() {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-[#E8FF00] text-black font-bold hover:bg-[#d4e800]"
+          className="w-full bg-[#FDF5AA] text-black font-bold hover:bg-[#e8e090]"
           size="lg"
         >
           {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
@@ -125,9 +125,9 @@ function LoginForm() {
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-zinc-500">
+      <p className="mt-6 text-center text-sm text-slate-400">
         Don&apos;t have an account?{" "}
-        <Link href="/register" className="font-medium text-[#E8FF00] hover:underline">
+        <Link href="/register" className="font-medium text-[#FDF5AA] hover:underline">
           Create one
         </Link>
       </p>
@@ -137,8 +137,8 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#0A0A0B] px-4">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(232,255,0,0.04)_0%,_transparent_60%)]" />
+    <div className="flex min-h-screen items-center justify-center bg-[#0B2540] px-4">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(88,160,200,0.08)_0%,_transparent_60%)]" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -147,7 +147,7 @@ export default function LoginPage() {
       >
         <div className="mb-8 flex flex-col items-center">
           <Link href="/" className="flex items-center gap-2 mb-6">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#E8FF00]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FDF5AA]">
               <Car className="h-6 w-6 text-black" />
             </div>
             <span className="font-display text-2xl font-black tracking-widest text-white">
@@ -155,13 +155,13 @@ export default function LoginPage() {
             </span>
           </Link>
           <h1 className="text-2xl font-bold text-white">Welcome back</h1>
-          <p className="mt-1 text-sm text-zinc-500">Sign in to your account</p>
+          <p className="mt-1 text-sm text-slate-400">Sign in to your account</p>
         </div>
 
         <Suspense
           fallback={
-            <div className="rounded-2xl border border-white/10 bg-[#111113] p-8 flex items-center justify-center">
-              <Loader2 className="h-6 w-6 animate-spin text-[#E8FF00]" />
+            <div className="rounded-2xl border border-white/10 bg-[#113F67] p-8 flex items-center justify-center">
+              <Loader2 className="h-6 w-6 animate-spin text-[#FDF5AA]" />
             </div>
           }
         >

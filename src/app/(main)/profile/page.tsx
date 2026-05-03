@@ -81,7 +81,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0B] pt-20">
+    <div className="min-h-screen bg-[#0B2540] pt-20">
       <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -98,29 +98,29 @@ export default function ProfilePage() {
           <div className="relative">
             <Avatar className="h-20 w-20">
               <AvatarImage src={user?.image ?? undefined} />
-              <AvatarFallback className="bg-[#E8FF00] text-black text-xl font-bold">
+              <AvatarFallback className="bg-[#FDF5AA] text-black text-xl font-bold">
                 {user ? getInitials(user.name) : "?"}
               </AvatarFallback>
             </Avatar>
           </div>
           <div>
             <p className="text-lg font-semibold text-white">{user?.name}</p>
-            <p className="text-sm text-zinc-500">{user?.email}</p>
+            <p className="text-sm text-slate-400">{user?.email}</p>
           </div>
         </div>
 
         <Tabs defaultValue="profile">
-          <TabsList className="mb-6 bg-[#111113] border border-white/5">
+          <TabsList className="mb-6 bg-[#113F67] border border-white/5">
             <TabsTrigger
               value="profile"
-              className="data-[state=active]:bg-[#E8FF00] data-[state=active]:text-black"
+              className="data-[state=active]:bg-[#FDF5AA] data-[state=active]:text-black"
             >
               <User className="mr-2 h-4 w-4" />
               Profile
             </TabsTrigger>
             <TabsTrigger
               value="password"
-              className="data-[state=active]:bg-[#E8FF00] data-[state=active]:text-black"
+              className="data-[state=active]:bg-[#FDF5AA] data-[state=active]:text-black"
             >
               <Lock className="mr-2 h-4 w-4" />
               Password
@@ -128,13 +128,13 @@ export default function ProfilePage() {
           </TabsList>
 
           <TabsContent value="profile">
-            <div className="rounded-2xl border border-white/5 bg-[#111113] p-6">
+            <div className="rounded-2xl border border-white/5 bg-[#113F67] p-6">
               <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-4">
                 <div>
-                  <Label className="text-zinc-400">Full Name</Label>
+                  <Label className="text-slate-300">Full Name</Label>
                   <Input
                     {...profileForm.register("name")}
-                    className="mt-1.5 border-white/10 bg-white/5 text-white placeholder-zinc-500 focus:border-[#E8FF00]/30"
+                    className="mt-1.5 border-white/10 bg-white/5 text-white placeholder-zinc-500 focus:border-[#FDF5AA]/30"
                   />
                   {profileForm.formState.errors.name && (
                     <p className="mt-1 text-xs text-red-400">
@@ -144,21 +144,21 @@ export default function ProfilePage() {
                 </div>
 
                 <div>
-                  <Label className="text-zinc-400">Email</Label>
+                  <Label className="text-slate-300">Email</Label>
                   <Input
                     value={user?.email ?? ""}
                     disabled
-                    className="mt-1.5 border-white/10 bg-white/5 text-zinc-500 cursor-not-allowed"
+                    className="mt-1.5 border-white/10 bg-white/5 text-slate-400 cursor-not-allowed"
                   />
-                  <p className="mt-1 text-xs text-zinc-600">Email cannot be changed</p>
+                  <p className="mt-1 text-xs text-slate-500">Email cannot be changed</p>
                 </div>
 
                 <div>
-                  <Label className="text-zinc-400">Phone (optional)</Label>
+                  <Label className="text-slate-300">Phone (optional)</Label>
                   <Input
                     {...profileForm.register("phone")}
                     placeholder="+1 (555) 000-0000"
-                    className="mt-1.5 border-white/10 bg-white/5 text-white placeholder-zinc-500 focus:border-[#E8FF00]/30"
+                    className="mt-1.5 border-white/10 bg-white/5 text-white placeholder-zinc-500 focus:border-[#FDF5AA]/30"
                   />
                 </div>
 
@@ -176,7 +176,7 @@ export default function ProfilePage() {
                 <Button
                   type="submit"
                   disabled={profileForm.formState.isSubmitting}
-                  className="bg-[#E8FF00] text-black font-bold hover:bg-[#d4e800]"
+                  className="bg-[#FDF5AA] text-black font-bold hover:bg-[#e8e090]"
                 >
                   {profileForm.formState.isSubmitting ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -188,14 +188,14 @@ export default function ProfilePage() {
           </TabsContent>
 
           <TabsContent value="password">
-            <div className="rounded-2xl border border-white/5 bg-[#111113] p-6">
+            <div className="rounded-2xl border border-white/5 bg-[#113F67] p-6">
               <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4">
                 <div>
-                  <Label className="text-zinc-400">Current Password</Label>
+                  <Label className="text-slate-300">Current Password</Label>
                   <Input
                     {...passwordForm.register("currentPassword")}
                     type="password"
-                    className="mt-1.5 border-white/10 bg-white/5 text-white focus:border-[#E8FF00]/30"
+                    className="mt-1.5 border-white/10 bg-white/5 text-white focus:border-[#FDF5AA]/30"
                   />
                   {passwordForm.formState.errors.currentPassword && (
                     <p className="mt-1 text-xs text-red-400">
@@ -205,11 +205,11 @@ export default function ProfilePage() {
                 </div>
 
                 <div>
-                  <Label className="text-zinc-400">New Password</Label>
+                  <Label className="text-slate-300">New Password</Label>
                   <Input
                     {...passwordForm.register("newPassword")}
                     type="password"
-                    className="mt-1.5 border-white/10 bg-white/5 text-white focus:border-[#E8FF00]/30"
+                    className="mt-1.5 border-white/10 bg-white/5 text-white focus:border-[#FDF5AA]/30"
                   />
                   {passwordForm.formState.errors.newPassword && (
                     <p className="mt-1 text-xs text-red-400">
@@ -219,11 +219,11 @@ export default function ProfilePage() {
                 </div>
 
                 <div>
-                  <Label className="text-zinc-400">Confirm New Password</Label>
+                  <Label className="text-slate-300">Confirm New Password</Label>
                   <Input
                     {...passwordForm.register("confirmPassword")}
                     type="password"
-                    className="mt-1.5 border-white/10 bg-white/5 text-white focus:border-[#E8FF00]/30"
+                    className="mt-1.5 border-white/10 bg-white/5 text-white focus:border-[#FDF5AA]/30"
                   />
                   {passwordForm.formState.errors.confirmPassword && (
                     <p className="mt-1 text-xs text-red-400">
@@ -246,7 +246,7 @@ export default function ProfilePage() {
                 <Button
                   type="submit"
                   disabled={passwordForm.formState.isSubmitting}
-                  className="bg-[#E8FF00] text-black font-bold hover:bg-[#d4e800]"
+                  className="bg-[#FDF5AA] text-black font-bold hover:bg-[#e8e090]"
                 >
                   {passwordForm.formState.isSubmitting ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

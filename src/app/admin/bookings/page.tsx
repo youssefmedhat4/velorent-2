@@ -63,13 +63,13 @@ export default function AdminBookingsPage() {
         <h1 className="font-display text-4xl font-black uppercase text-white">
           Bookings
         </h1>
-        <p className="mt-1 text-sm text-zinc-500">{bookings.length} total bookings</p>
+        <p className="mt-1 text-sm text-slate-400">{bookings.length} total bookings</p>
       </div>
 
       {/* Filters */}
       <div className="mb-6 flex flex-wrap items-center gap-3">
         <div className="relative max-w-xs flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -82,8 +82,8 @@ export default function AdminBookingsPage() {
             onClick={() => setStatusFilter("ALL")}
             className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
               statusFilter === "ALL"
-                ? "bg-[#E8FF00]/10 text-[#E8FF00]"
-                : "border border-white/10 text-zinc-400 hover:text-white"
+                ? "bg-[#FDF5AA]/10 text-[#FDF5AA]"
+                : "border border-white/10 text-slate-300 hover:text-white"
             }`}
           >
             All
@@ -94,8 +94,8 @@ export default function AdminBookingsPage() {
               onClick={() => setStatusFilter(s)}
               className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
                 statusFilter === s
-                  ? "bg-[#E8FF00]/10 text-[#E8FF00]"
-                  : "border border-white/10 text-zinc-400 hover:text-white"
+                  ? "bg-[#FDF5AA]/10 text-[#FDF5AA]"
+                  : "border border-white/10 text-slate-300 hover:text-white"
               }`}
             >
               {s}
@@ -106,7 +106,7 @@ export default function AdminBookingsPage() {
 
       {loading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="h-8 w-8 animate-spin text-[#E8FF00]" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#FDF5AA]" />
         </div>
       ) : (
         <div className="overflow-hidden rounded-2xl border border-white/5">
@@ -117,7 +117,7 @@ export default function AdminBookingsPage() {
                   {["ID", "Customer", "Car", "Dates", "Total", "Status", "Actions"].map((h) => (
                     <th
                       key={h}
-                      className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-500"
+                      className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-400"
                     >
                       {h}
                     </th>
@@ -133,17 +133,17 @@ export default function AdminBookingsPage() {
                     transition={{ delay: i * 0.02 }}
                     className="hover:bg-white/5 transition-colors"
                   >
-                    <td className="px-4 py-3 text-xs font-mono text-zinc-500">
+                    <td className="px-4 py-3 text-xs font-mono text-slate-400">
                       #{booking.id.slice(-8).toUpperCase()}
                     </td>
                     <td className="px-4 py-3">
                       <p className="text-sm text-white">{booking.user?.name}</p>
-                      <p className="text-xs text-zinc-500">{booking.user?.email}</p>
+                      <p className="text-xs text-slate-400">{booking.user?.email}</p>
                     </td>
                     <td className="px-4 py-3 text-sm text-white">
                       {booking.car?.name}
                     </td>
-                    <td className="px-4 py-3 text-xs text-zinc-400">
+                    <td className="px-4 py-3 text-xs text-slate-300">
                       {formatDate(booking.startDate)} →{" "}
                       {formatDate(booking.endDate)}
                     </td>
@@ -166,10 +166,10 @@ export default function AdminBookingsPage() {
                           handleStatusChange(booking.id, e.target.value as BookingStatus)
                         }
                         disabled={updating === booking.id}
-                        className="rounded-lg border border-white/10 bg-[#111113] px-2 py-1 text-xs text-zinc-300 outline-none"
+                        className="rounded-lg border border-white/10 bg-[#113F67] px-2 py-1 text-xs text-slate-200 outline-none"
                       >
                         {statusOptions.map((s) => (
-                          <option key={s} value={s} className="bg-[#111113]">
+                          <option key={s} value={s} className="bg-[#113F67]">
                             {s}
                           </option>
                         ))}
@@ -182,7 +182,7 @@ export default function AdminBookingsPage() {
           </div>
 
           {filtered.length === 0 && (
-            <div className="py-16 text-center text-zinc-500">No bookings found</div>
+            <div className="py-16 text-center text-slate-400">No bookings found</div>
           )}
         </div>
       )}

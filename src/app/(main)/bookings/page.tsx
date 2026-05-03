@@ -41,7 +41,7 @@ export default function BookingsPage() {
   if (loading) return <PageLoader />;
 
   return (
-    <div className="min-h-screen bg-[#0A0A0B] pt-20">
+    <div className="min-h-screen bg-[#0B2540] pt-20">
       <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -51,20 +51,20 @@ export default function BookingsPage() {
           <h1 className="font-display text-4xl font-black uppercase text-white">
             My Bookings
           </h1>
-          <p className="mt-1 text-sm text-zinc-500">
+          <p className="mt-1 text-sm text-slate-400">
             {bookings.length} total booking{bookings.length !== 1 ? "s" : ""}
           </p>
         </motion.div>
 
         <Tabs defaultValue="upcoming">
-          <TabsList className="mb-6 bg-[#111113] border border-white/5">
+          <TabsList className="mb-6 bg-[#113F67] border border-white/5">
             {tabs.map((tab) => {
               const count = getBookingsForTab(tab.statuses).length;
               return (
                 <TabsTrigger
                   key={tab.value}
                   value={tab.value}
-                  className="data-[state=active]:bg-[#E8FF00] data-[state=active]:text-black"
+                  className="data-[state=active]:bg-[#FDF5AA] data-[state=active]:text-black"
                 >
                   {tab.label}
                   {count > 0 && (
@@ -83,7 +83,7 @@ export default function BookingsPage() {
               <TabsContent key={tab.value} value={tab.value}>
                 {tabBookings.length === 0 ? (
                   <div className="flex flex-col items-center justify-center gap-3 py-20 text-center">
-                    <p className="text-zinc-500">No {tab.label.toLowerCase()} bookings</p>
+                    <p className="text-slate-400">No {tab.label.toLowerCase()} bookings</p>
                   </div>
                 ) : (
                   <div className="space-y-4">

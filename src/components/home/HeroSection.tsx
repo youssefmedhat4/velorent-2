@@ -14,26 +14,26 @@ function HeroCarModel() {
         {/* Car body */}
         <mesh position={[0, 0, 0]} castShadow>
           <boxGeometry args={[3, 0.6, 1.4]} />
-          <meshStandardMaterial color="#1a1a2e" metalness={0.9} roughness={0.1} />
+          <meshStandardMaterial color="#0E2D4A" metalness={0.9} roughness={0.1} />
         </mesh>
         {/* Car roof */}
         <mesh position={[0, 0.55, 0]} castShadow>
           <boxGeometry args={[1.8, 0.5, 1.2]} />
-          <meshStandardMaterial color="#16213e" metalness={0.9} roughness={0.1} />
+          <meshStandardMaterial color="#163352" metalness={0.9} roughness={0.1} />
         </mesh>
         {/* Wheels */}
         {[[-1.1, -0.35, 0.8], [1.1, -0.35, 0.8], [-1.1, -0.35, -0.8], [1.1, -0.35, -0.8]].map(
           ([x, y, z], i) => (
             <mesh key={i} position={[x, y, z]} rotation={[Math.PI / 2, 0, 0]} castShadow>
               <cylinderGeometry args={[0.35, 0.35, 0.25, 32]} />
-              <meshStandardMaterial color="#0f0f0f" metalness={0.5} roughness={0.5} />
+              <meshStandardMaterial color="#0B2540" metalness={0.6} roughness={0.4} />
             </mesh>
           )
         )}
         {/* Accent strip */}
         <mesh position={[0, 0.05, 0.71]}>
           <boxGeometry args={[2.8, 0.05, 0.02]} />
-          <meshStandardMaterial color="#E8FF00" emissive="#E8FF00" emissiveIntensity={0.5} />
+          <meshStandardMaterial color="#FDF5AA" emissive="#FDF5AA" emissiveIntensity={0.5} />
         </mesh>
       </group>
     </Float>
@@ -43,7 +43,7 @@ function HeroCarModel() {
 function CanvasLoader() {
   return (
     <Html center>
-      <div className="h-8 w-8 animate-spin rounded-full border-2 border-transparent border-t-[#E8FF00]" />
+      <div className="h-8 w-8 animate-spin rounded-full border-2 border-transparent border-t-[#FDF5AA]" />
     </Html>
   );
 }
@@ -52,16 +52,16 @@ export function HeroSection() {
   const [autoRotate, setAutoRotate] = useState(true);
 
   return (
-    <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#0A0A0B]">
+    <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#0B2540]">
       {/* Background effects */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(232,255,0,0.03)_0%,_transparent_70%)]" />
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#E8FF00]/20 to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(88,160,200,0.08)_0%,_transparent_70%)]" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#58A0C8]/30 to-transparent" />
         {/* Grid pattern */}
         <div
-          className="absolute inset-0 opacity-[0.02]"
+          className="absolute inset-0 opacity-[0.04]"
           style={{
-            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(rgba(88,160,200,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(88,160,200,0.3) 1px, transparent 1px)`,
             backgroundSize: "60px 60px",
           }}
         />
@@ -73,10 +73,10 @@ export function HeroSection() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#E8FF00]/20 bg-[#E8FF00]/5 px-4 py-1.5"
+          className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#FDF5AA]/20 bg-[#FDF5AA]/5 px-4 py-1.5"
         >
-          <span className="h-1.5 w-1.5 rounded-full bg-[#E8FF00] animate-pulse" />
-          <span className="text-xs font-medium text-[#E8FF00]">500+ Premium Vehicles Available</span>
+          <span className="h-1.5 w-1.5 rounded-full bg-[#FDF5AA] animate-pulse" />
+          <span className="text-xs font-medium text-[#FDF5AA]">500+ Premium Vehicles Available</span>
         </motion.div>
 
         <motion.h1
@@ -87,14 +87,14 @@ export function HeroSection() {
         >
           Drive the
           <br />
-          <span className="text-[#E8FF00]">Future</span>
+          <span className="text-[#FDF5AA]">Future</span>
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="mt-6 max-w-lg text-base text-zinc-400 sm:text-lg"
+          className="mt-6 max-w-lg text-base text-slate-300 sm:text-lg"
         >
           Premium car rental for those who demand the extraordinary.
           From sleek sports cars to powerful SUVs — your perfect ride awaits.
@@ -117,8 +117,8 @@ export function HeroSection() {
         >
           <ambientLight intensity={0.5} />
           <directionalLight position={[5, 5, 5]} intensity={1.5} castShadow />
-          <directionalLight position={[-5, 3, -5]} intensity={0.5} color="#E8FF00" />
-          <pointLight position={[0, 5, 0]} intensity={0.5} color="#00D4FF" />
+          <directionalLight position={[-5, 3, -5]} intensity={0.5} color="#58A0C8" />
+          <pointLight position={[0, 5, 0]} intensity={0.5} color="#FDF5AA" />
 
           <Suspense fallback={<CanvasLoader />}>
             <HeroCarModel />
@@ -158,11 +158,11 @@ export function HeroSection() {
         transition={{ delay: 1.2 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1"
       >
-        <span className="text-xs text-zinc-600">Scroll to explore</span>
+        <span className="text-xs text-slate-500">Scroll to explore</span>
         <motion.div
           animate={{ y: [0, 6, 0] }}
           transition={{ repeat: Infinity, duration: 1.5 }}
-          className="h-4 w-0.5 rounded-full bg-zinc-700"
+          className="h-4 w-0.5 rounded-full bg-[#1a4f7a]"
         />
       </motion.div>
     </section>

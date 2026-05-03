@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { stripe } from "@/lib/stripe";
+import { sendBookingConfirmation } from "@/lib/resend";
+
+// MOCK PAYMENT — no Stripe required (university project)
+// Instantly confirms the booking and marks it as paid.
 
 export async function POST(req: NextRequest) {
   try {
@@ -48,47 +51,62 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(booking.totalPrice * 100), // cents
-      currency: "usd",
-      metadata: {
-        bookingId: booking.id,
-        userId: booking.userId,
-        carId: booking.carId,
-      },
-      description: `VeloRent — ${booking.car.name} (${booking.totalDays} days)`,
-    });
+    // Mock payment — instantly confirm
+    const mockPaymentId = `mock_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
 
-    // Update booking with payment intent ID
     await prisma.booking.update({
       where: { id: bookingId },
-      data: { paymentIntentId: paymentIntent.id },
+      data: {
+        status: "CONFIRMED",
+        paymentStatus: "PAID",
+        paymentIntentId: mockPaymentId,
+      },
     });
 
-    // Create or update payment record
     await prisma.payment.upsert({
       where: { bookingId },
       create: {
         bookingId,
         amount: booking.totalPrice,
         currency: "usd",
-        stripeId: paymentIntent.id,
-        status: "UNPAID",
+        method: "mock",
+        status: "PAID",
+        stripeId: mockPaymentId,
+        paidAt: new Date(),
       },
       update: {
-        stripeId: paymentIntent.id,
+        status: "PAID",
+        stripeId: mockPaymentId,
+        paidAt: new Date(),
+        method: "mock",
       },
     });
+
+    // Try sending confirmation email (won't fail if Resend isn't configured)
+    try {
+      await sendBookingConfirmation({
+        to: booking.user.email,
+        userName: booking.user.name,
+        carName: booking.car.name,
+        startDate: booking.startDate,
+        endDate: booking.endDate,
+        totalPrice: booking.totalPrice,
+        bookingId: booking.id,
+      });
+    } catch {
+      // Email is optional — don't fail the payment if Resend isn't set up
+    }
 
     return NextResponse.json({
       success: true,
       data: {
-        clientSecret: paymentIntent.client_secret,
-        paymentIntentId: paymentIntent.id,
+        mock: true,
+        paymentId: mockPaymentId,
+        message: "Payment confirmed (mock)",
       },
     });
   } catch (error) {
-    console.error("[PAYMENT_INTENT]", error);
+    console.error("[PAYMENT_MOCK]", error);
     return NextResponse.json(
       { success: false, error: "Internal server error", code: "INTERNAL_ERROR" },
       { status: 500 }

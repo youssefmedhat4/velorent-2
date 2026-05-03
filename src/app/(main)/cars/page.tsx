@@ -82,11 +82,11 @@ function CarsContent() {
         <div className="flex-1 min-w-0">
           {/* Sort & Count Bar */}
           <div className="mb-6 flex items-center justify-between gap-4">
-            <p className="text-sm text-zinc-500">
+            <p className="text-sm text-slate-400">
               {loading ? "..." : `${pagination.total} results`}
             </p>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-zinc-600">Sort:</span>
+              <span className="text-xs text-slate-500">Sort:</span>
               <div className="flex gap-1">
                 {sortOptions.map((opt) => (
                   <button
@@ -94,8 +94,8 @@ function CarsContent() {
                     onClick={() => setSort(opt.value)}
                     className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
                       sort === opt.value
-                        ? "bg-[#E8FF00]/10 text-[#E8FF00]"
-                        : "text-zinc-500 hover:text-white"
+                        ? "bg-[#FDF5AA]/10 text-[#FDF5AA]"
+                        : "text-slate-400 hover:text-white"
                     }`}
                   >
                     {opt.label}
@@ -115,7 +115,7 @@ function CarsContent() {
                 size="sm"
                 onClick={() => setPage(page - 1)}
                 disabled={page <= 1}
-                className="border-white/10 text-zinc-400 hover:bg-white/5 hover:text-white disabled:opacity-30"
+                className="border-white/10 text-slate-300 hover:bg-white/5 hover:text-white disabled:opacity-30"
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
@@ -128,8 +128,8 @@ function CarsContent() {
                     onClick={() => setPage(p)}
                     className={`h-9 w-9 rounded-lg text-sm font-medium transition-all ${
                       p === page
-                        ? "bg-[#E8FF00] text-black"
-                        : "border border-white/10 text-zinc-400 hover:bg-white/5 hover:text-white"
+                        ? "bg-[#FDF5AA] text-black"
+                        : "border border-white/10 text-slate-300 hover:bg-white/5 hover:text-white"
                     }`}
                   >
                     {p}
@@ -141,7 +141,7 @@ function CarsContent() {
                 size="sm"
                 onClick={() => setPage(page + 1)}
                 disabled={page >= pagination.totalPages}
-                className="border-white/10 text-zinc-400 hover:bg-white/5 hover:text-white disabled:opacity-30"
+                className="border-white/10 text-slate-300 hover:bg-white/5 hover:text-white disabled:opacity-30"
               >
                 <ChevronRight className="h-4 w-4" />
               </Button>
@@ -155,9 +155,9 @@ function CarsContent() {
 
 export default function CarsPage() {
   return (
-    <div className="min-h-screen bg-[#0A0A0B] pt-20">
+    <div className="min-h-screen bg-[#0B2540] pt-20">
       {/* Header */}
-      <div className="border-b border-white/5 bg-[#0D0D0F] py-8">
+      <div className="border-b border-white/5 bg-[#0E2D4A] py-8">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="font-display text-4xl font-black uppercase text-white">
@@ -170,7 +170,7 @@ export default function CarsPage() {
       <Suspense
         fallback={
           <div className="flex items-center justify-center py-24">
-            <Loader2 className="h-8 w-8 animate-spin text-[#E8FF00]" />
+            <Loader2 className="h-8 w-8 animate-spin text-[#FDF5AA]" />
           </div>
         }
       >

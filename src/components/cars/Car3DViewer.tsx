@@ -32,8 +32,8 @@ function ModelLoader() {
   return (
     <Html center>
       <div className="flex flex-col items-center gap-2">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-transparent border-t-[#E8FF00]" />
-        <p className="text-xs text-zinc-400">Loading 3D model...</p>
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-transparent border-t-[#FDF5AA]" />
+        <p className="text-xs text-slate-300">Loading 3D model...</p>
       </div>
     </Html>
   );
@@ -99,13 +99,13 @@ export function Car3DViewer({ modelUrl, images = [], carName }: Car3DViewerProps
 
       {/* Controls hint */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 rounded-full border border-white/10 bg-black/40 px-3 py-1.5 backdrop-blur-sm">
-        <RotateCcw className="h-3 w-3 text-zinc-400" />
-        <span className="text-xs text-zinc-400">Drag to rotate · Scroll to zoom</span>
+        <RotateCcw className="h-3 w-3 text-slate-300" />
+        <span className="text-xs text-slate-300">Drag to rotate · Scroll to zoom</span>
       </div>
 
       {/* 3D badge */}
-      <div className="absolute top-4 right-4 rounded-md border border-[#E8FF00]/30 bg-[#E8FF00]/10 px-2 py-1">
-        <span className="text-xs font-bold text-[#E8FF00]">3D</span>
+      <div className="absolute top-4 right-4 rounded-md border border-[#FDF5AA]/30 bg-[#FDF5AA]/10 px-2 py-1">
+        <span className="text-xs font-bold text-[#FDF5AA]">3D</span>
       </div>
     </div>
   );

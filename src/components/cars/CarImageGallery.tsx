@@ -24,7 +24,7 @@ export function CarImageGallery({ images, carName }: CarImageGalleryProps) {
 
   return (
     <>
-      <div className="relative h-full w-full min-h-[400px] overflow-hidden rounded-2xl bg-zinc-900">
+      <div className="relative h-full w-full min-h-[400px] overflow-hidden rounded-2xl bg-[#0E2D4A]">
         {/* Main Image */}
         <AnimatePresence mode="wait">
           <motion.div
@@ -84,7 +84,7 @@ export function CarImageGallery({ images, carName }: CarImageGalleryProps) {
                 onClick={() => setActiveIndex(i)}
                 className={cn(
                   "h-1.5 rounded-full transition-all",
-                  i === activeIndex ? "w-6 bg-[#E8FF00]" : "w-1.5 bg-white/30"
+                  i === activeIndex ? "w-6 bg-[#FDF5AA]" : "w-1.5 bg-white/30"
                 )}
                 aria-label={`Go to image ${i + 1}`}
               />
@@ -103,7 +103,7 @@ export function CarImageGallery({ images, carName }: CarImageGalleryProps) {
               className={cn(
                 "relative h-16 w-24 shrink-0 overflow-hidden rounded-lg border-2 transition-all",
                 i === activeIndex
-                  ? "border-[#E8FF00]"
+                  ? "border-[#FDF5AA]"
                   : "border-transparent opacity-60 hover:opacity-100"
               )}
             >

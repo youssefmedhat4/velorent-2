@@ -54,7 +54,7 @@ export function StatsSection() {
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section ref={ref} className="border-y border-white/5 bg-[#0D0D0F] py-20">
+    <section ref={ref} className="border-y border-white/5 bg-[#0E2D4A] py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
           {stats.map((stat, i) => (
@@ -65,7 +65,7 @@ export function StatsSection() {
               transition={{ duration: 0.5, delay: i * 0.1 }}
               className="text-center"
             >
-              <p className="font-display text-4xl font-black text-[#E8FF00] sm:text-5xl">
+              <p className="font-display text-4xl font-black text-[#FDF5AA] sm:text-5xl">
                 <AnimatedCounter
                   value={stat.value}
                   suffix={stat.suffix}
@@ -73,7 +73,7 @@ export function StatsSection() {
                   active={inView}
                 />
               </p>
-              <p className="mt-2 text-sm text-zinc-500">{stat.label}</p>
+              <p className="mt-2 text-sm text-slate-400">{stat.label}</p>
             </motion.div>
           ))}
         </div>

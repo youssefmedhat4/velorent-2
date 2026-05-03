@@ -39,14 +39,14 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
           </div>
           <div>
             <h2 className="text-xl font-semibold text-white">Something went wrong</h2>
-            <p className="mt-1 text-sm text-zinc-400">
+            <p className="mt-1 text-sm text-slate-300">
               {this.state.error?.message ?? "An unexpected error occurred"}
             </p>
           </div>
           <Button
             variant="outline"
             onClick={() => this.setState({ hasError: false, error: null })}
-            className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+            className="border-[#34699A] text-slate-200 hover:bg-[#113F67]"
           >
             Try again
           </Button>

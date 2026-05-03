@@ -24,7 +24,7 @@ export function BookingCard({ booking, onCancel, index = 0 }: BookingCardProps) 
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
-      className="overflow-hidden rounded-2xl border border-white/5 bg-[#111113] transition-colors hover:border-white/10"
+      className="overflow-hidden rounded-2xl border border-white/5 bg-[#113F67] transition-colors hover:border-white/10"
     >
       <div className="flex flex-col sm:flex-row">
         {/* Car Image */}
@@ -42,11 +42,11 @@ export function BookingCard({ booking, onCancel, index = 0 }: BookingCardProps) 
         <div className="flex flex-1 flex-col justify-between p-5">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">
+              <p className="text-xs font-medium uppercase tracking-wider text-slate-400">
                 {car?.brand}
               </p>
               <h3 className="mt-0.5 font-semibold text-white">{car?.name}</h3>
-              <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-zinc-500">
+              <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-400">
                 <span className="flex items-center gap-1">
                   <CalendarDays className="h-3 w-3" />
                   {formatDateRange(booking.startDate, booking.endDate)}
@@ -71,7 +71,7 @@ export function BookingCard({ booking, onCancel, index = 0 }: BookingCardProps) 
               <p className="mt-2 text-lg font-bold text-white">
                 {formatCurrency(booking.totalPrice)}
               </p>
-              <p className="text-xs text-zinc-500">{booking.totalDays} days</p>
+              <p className="text-xs text-slate-400">{booking.totalDays} days</p>
             </div>
           </div>
 
@@ -81,7 +81,7 @@ export function BookingCard({ booking, onCancel, index = 0 }: BookingCardProps) 
               <Button
                 variant="outline"
                 size="sm"
-                className="border-white/10 text-zinc-300 hover:bg-white/5 hover:text-white"
+                className="border-white/10 text-slate-200 hover:bg-white/5 hover:text-white"
               >
                 View Details
                 <ArrowRight className="ml-1 h-3 w-3" />
@@ -93,7 +93,7 @@ export function BookingCard({ booking, onCancel, index = 0 }: BookingCardProps) 
                 <Button
                   size="sm"
                   variant="outline"
-                  className="border-[#E8FF00]/30 text-[#E8FF00] hover:bg-[#E8FF00]/10"
+                  className="border-[#FDF5AA]/30 text-[#FDF5AA] hover:bg-[#FDF5AA]/10"
                 >
                   <Star className="mr-1 h-3 w-3" />
                   Leave Review

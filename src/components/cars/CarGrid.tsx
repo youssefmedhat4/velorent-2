@@ -17,7 +17,7 @@ export function CarGrid({ cars, loading }: CarGridProps) {
         {Array.from({ length: 6 }).map((_, i) => (
           <div
             key={i}
-            className="h-72 animate-pulse rounded-2xl bg-zinc-900"
+            className="h-72 animate-pulse rounded-2xl bg-[#0E2D4A]"
           />
         ))}
       </div>
@@ -27,12 +27,12 @@ export function CarGrid({ cars, loading }: CarGridProps) {
   if (cars.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center gap-4 py-24 text-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-zinc-900">
-          <Car className="h-8 w-8 text-zinc-600" />
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#0E2D4A]">
+          <Car className="h-8 w-8 text-slate-500" />
         </div>
         <div>
           <h3 className="text-lg font-semibold text-white">No cars found</h3>
-          <p className="mt-1 text-sm text-zinc-500">
+          <p className="mt-1 text-sm text-slate-400">
             Try adjusting your filters to see more results.
           </p>
         </div>

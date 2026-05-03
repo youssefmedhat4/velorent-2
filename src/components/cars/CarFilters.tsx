@@ -39,13 +39,13 @@ export function CarFilters({ className }: CarFiltersProps) {
     <aside className={cn("space-y-6", className)}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <SlidersHorizontal className="h-4 w-4 text-zinc-400" />
+          <SlidersHorizontal className="h-4 w-4 text-slate-300" />
           <h2 className="text-sm font-semibold text-white">Filters</h2>
         </div>
         {hasActiveFilters && (
           <button
             onClick={reset}
-            className="flex items-center gap-1 text-xs text-zinc-500 hover:text-white transition-colors"
+            className="flex items-center gap-1 text-xs text-slate-400 hover:text-white transition-colors"
           >
             <X className="h-3 w-3" />
             Clear all
@@ -55,7 +55,7 @@ export function CarFilters({ className }: CarFiltersProps) {
 
       {/* Category */}
       <div>
-        <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-zinc-500">
+        <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-slate-400">
           Category
         </h3>
         <div className="flex flex-wrap gap-2">
@@ -66,8 +66,8 @@ export function CarFilters({ className }: CarFiltersProps) {
               className={cn(
                 "rounded-lg border px-3 py-1.5 text-xs font-medium transition-all",
                 category === cat
-                  ? "border-[#E8FF00]/50 bg-[#E8FF00]/10 text-[#E8FF00]"
-                  : "border-white/10 text-zinc-400 hover:border-white/20 hover:text-white"
+                  ? "border-[#FDF5AA]/50 bg-[#FDF5AA]/10 text-[#FDF5AA]"
+                  : "border-white/10 text-slate-300 hover:border-white/20 hover:text-white"
               )}
             >
               {cat}
@@ -79,10 +79,10 @@ export function CarFilters({ className }: CarFiltersProps) {
       {/* Price Range */}
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <h3 className="text-xs font-medium uppercase tracking-wider text-zinc-500">
+          <h3 className="text-xs font-medium uppercase tracking-wider text-slate-400">
             Price / Day
           </h3>
-          <span className="text-xs text-zinc-400">
+          <span className="text-xs text-slate-300">
             {formatCurrency(minPrice)} — {formatCurrency(maxPrice)}
           </span>
         </div>
@@ -95,13 +95,13 @@ export function CarFilters({ className }: CarFiltersProps) {
             const vals = Array.isArray(value) ? value : [value, value];
             setPriceRange(vals[0] as number, vals[1] as number);
           }}
-          className="[&_[data-slot=slider-range]]:bg-[#E8FF00] [&_[data-slot=slider-thumb]]:border-[#E8FF00]"
+          className="[&_[data-slot=slider-range]]:bg-[#FDF5AA] [&_[data-slot=slider-thumb]]:border-[#FDF5AA]"
         />
       </div>
 
       {/* Transmission */}
       <div>
-        <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-zinc-500">
+        <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-slate-400">
           Transmission
         </h3>
         <div className="flex gap-2">
@@ -112,8 +112,8 @@ export function CarFilters({ className }: CarFiltersProps) {
               className={cn(
                 "flex-1 rounded-lg border py-2 text-xs font-medium transition-all",
                 transmission === t
-                  ? "border-[#E8FF00]/50 bg-[#E8FF00]/10 text-[#E8FF00]"
-                  : "border-white/10 text-zinc-400 hover:border-white/20 hover:text-white"
+                  ? "border-[#FDF5AA]/50 bg-[#FDF5AA]/10 text-[#FDF5AA]"
+                  : "border-white/10 text-slate-300 hover:border-white/20 hover:text-white"
               )}
             >
               {t === "AUTOMATIC" ? "Auto" : "Manual"}
@@ -124,7 +124,7 @@ export function CarFilters({ className }: CarFiltersProps) {
 
       {/* Fuel Type */}
       <div>
-        <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-zinc-500">
+        <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-slate-400">
           Fuel Type
         </h3>
         <div className="grid grid-cols-2 gap-2">
@@ -135,8 +135,8 @@ export function CarFilters({ className }: CarFiltersProps) {
               className={cn(
                 "rounded-lg border py-2 text-xs font-medium transition-all",
                 fuelType === f
-                  ? "border-[#E8FF00]/50 bg-[#E8FF00]/10 text-[#E8FF00]"
-                  : "border-white/10 text-zinc-400 hover:border-white/20 hover:text-white"
+                  ? "border-[#FDF5AA]/50 bg-[#FDF5AA]/10 text-[#FDF5AA]"
+                  : "border-white/10 text-slate-300 hover:border-white/20 hover:text-white"
               )}
             >
               {f}
@@ -147,7 +147,7 @@ export function CarFilters({ className }: CarFiltersProps) {
 
       {/* Seats */}
       <div>
-        <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-zinc-500">
+        <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-slate-400">
           Min. Seats
         </h3>
         <div className="flex flex-wrap gap-2">
@@ -158,8 +158,8 @@ export function CarFilters({ className }: CarFiltersProps) {
               className={cn(
                 "h-9 w-9 rounded-lg border text-xs font-medium transition-all",
                 seats === s
-                  ? "border-[#E8FF00]/50 bg-[#E8FF00]/10 text-[#E8FF00]"
-                  : "border-white/10 text-zinc-400 hover:border-white/20 hover:text-white"
+                  ? "border-[#FDF5AA]/50 bg-[#FDF5AA]/10 text-[#FDF5AA]"
+                  : "border-white/10 text-slate-300 hover:border-white/20 hover:text-white"
               )}
             >
               {s}+

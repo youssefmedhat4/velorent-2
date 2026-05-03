@@ -47,23 +47,23 @@ export function LocationPicker({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex w-full items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-left transition-colors hover:border-white/20 focus:outline-none focus:ring-2 focus:ring-[#E8FF00]/20"
+        className="flex w-full items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-left transition-colors hover:border-white/20 focus:outline-none focus:ring-2 focus:ring-[#FDF5AA]/20"
       >
-        <MapPin className="h-4 w-4 shrink-0 text-zinc-400" />
-        <span className={cn("flex-1 text-sm", selected ? "text-white" : "text-zinc-500")}>
+        <MapPin className="h-4 w-4 shrink-0 text-slate-300" />
+        <span className={cn("flex-1 text-sm", selected ? "text-white" : "text-slate-400")}>
           {selected ? `${selected.name}, ${selected.city}` : placeholder}
         </span>
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 z-50 mt-2 w-full rounded-xl border border-white/10 bg-[#111113] shadow-2xl">
+        <div className="absolute top-full left-0 z-50 mt-2 w-full rounded-xl border border-white/10 bg-[#113F67] shadow-2xl">
           <div className="p-2">
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search locations..."
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-[#E8FF00]/30"
+              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-[#FDF5AA]/30"
               autoFocus
             />
           </div>
@@ -71,7 +71,7 @@ export function LocationPicker({
             <button
               type="button"
               onClick={() => { onChange(null); setOpen(false); setSearch(""); }}
-              className="flex w-full items-center gap-2 px-3 py-2 text-sm text-zinc-500 hover:bg-white/5 hover:text-white"
+              className="flex w-full items-center gap-2 px-3 py-2 text-sm text-slate-400 hover:bg-white/5 hover:text-white"
             >
               <span>No preference</span>
             </button>
@@ -87,19 +87,19 @@ export function LocationPicker({
                 className={cn(
                   "flex w-full items-center gap-2 px-3 py-2 text-sm transition-colors",
                   value === location.id
-                    ? "bg-[#E8FF00]/10 text-[#E8FF00]"
-                    : "text-zinc-300 hover:bg-white/5 hover:text-white"
+                    ? "bg-[#FDF5AA]/10 text-[#FDF5AA]"
+                    : "text-slate-200 hover:bg-white/5 hover:text-white"
                 )}
               >
                 <MapPin className="h-3 w-3 shrink-0" />
                 <div className="text-left">
                   <p className="font-medium">{location.name}</p>
-                  <p className="text-xs text-zinc-500">{location.city}</p>
+                  <p className="text-xs text-slate-400">{location.city}</p>
                 </div>
               </button>
             ))}
             {filtered.length === 0 && (
-              <p className="px-3 py-4 text-center text-sm text-zinc-500">
+              <p className="px-3 py-4 text-center text-sm text-slate-400">
                 No locations found
               </p>
             )}

@@ -20,7 +20,7 @@ export function FeaturedCars() {
   };
 
   return (
-    <section className="py-24 bg-[#0A0A0B]">
+    <section className="py-24 bg-[#0B2540]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between mb-10">
           <div>
@@ -28,7 +28,7 @@ export function FeaturedCars() {
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-xs font-semibold uppercase tracking-widest text-[#E8FF00]"
+              className="text-xs font-semibold uppercase tracking-widest text-[#FDF5AA]"
             >
               Top Picks
             </motion.p>
@@ -46,21 +46,21 @@ export function FeaturedCars() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => scroll("left")}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-zinc-400 hover:border-white/20 hover:text-white transition-colors"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-slate-300 hover:border-white/20 hover:text-white transition-colors"
               aria-label="Scroll left"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
             <button
               onClick={() => scroll("right")}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-zinc-400 hover:border-white/20 hover:text-white transition-colors"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-slate-300 hover:border-white/20 hover:text-white transition-colors"
               aria-label="Scroll right"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
             <Link
               href="/cars"
-              className="hidden sm:flex items-center gap-1 text-sm font-medium text-zinc-400 hover:text-white transition-colors"
+              className="hidden sm:flex items-center gap-1 text-sm font-medium text-slate-300 hover:text-white transition-colors"
             >
               View all
               <ArrowRight className="h-4 w-4" />
@@ -71,7 +71,7 @@ export function FeaturedCars() {
         {loading ? (
           <div className="flex gap-6 overflow-hidden">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-72 w-72 shrink-0 animate-pulse rounded-2xl bg-zinc-900" />
+              <div key={i} className="h-72 w-72 shrink-0 animate-pulse rounded-2xl bg-[#0E2D4A]" />
             ))}
           </div>
         ) : (
@@ -91,7 +91,7 @@ export function FeaturedCars() {
         <div className="mt-8 flex justify-center sm:hidden">
           <Link
             href="/cars"
-            className="flex items-center gap-2 rounded-xl border border-white/10 px-6 py-3 text-sm font-medium text-zinc-300 hover:bg-white/5 hover:text-white transition-colors"
+            className="flex items-center gap-2 rounded-xl border border-white/10 px-6 py-3 text-sm font-medium text-slate-200 hover:bg-white/5 hover:text-white transition-colors"
           >
             Browse all cars
             <ArrowRight className="h-4 w-4" />

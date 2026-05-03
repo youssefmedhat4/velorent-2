@@ -65,11 +65,11 @@ export default function AdminUsersPage() {
         <h1 className="font-display text-4xl font-black uppercase text-white">
           Users
         </h1>
-        <p className="mt-1 text-sm text-zinc-500">{users.length} registered users</p>
+        <p className="mt-1 text-sm text-slate-400">{users.length} registered users</p>
       </div>
 
       <div className="relative mb-6 max-w-sm">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -80,7 +80,7 @@ export default function AdminUsersPage() {
 
       {loading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="h-8 w-8 animate-spin text-[#E8FF00]" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#FDF5AA]" />
         </div>
       ) : (
         <div className="overflow-hidden rounded-2xl border border-white/5">
@@ -90,7 +90,7 @@ export default function AdminUsersPage() {
                 {["User", "Role", "Bookings", "Joined", "Actions"].map((h) => (
                   <th
                     key={h}
-                    className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-500"
+                    className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-400"
                   >
                     {h}
                   </th>
@@ -110,13 +110,13 @@ export default function AdminUsersPage() {
                     <div className="flex items-center gap-3">
                       <Avatar className="h-8 w-8">
                         <AvatarImage src={user.avatar ?? undefined} />
-                        <AvatarFallback className="bg-zinc-800 text-xs text-zinc-300">
+                        <AvatarFallback className="bg-[#113F67] text-xs text-slate-200">
                           {getInitials(user.name)}
                         </AvatarFallback>
                       </Avatar>
                       <div>
                         <p className="text-sm font-medium text-white">{user.name}</p>
-                        <p className="text-xs text-zinc-500">{user.email}</p>
+                        <p className="text-xs text-slate-400">{user.email}</p>
                       </div>
                     </div>
                   </td>
@@ -124,8 +124,8 @@ export default function AdminUsersPage() {
                     <span
                       className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium ${
                         user.role === "ADMIN"
-                          ? "bg-[#E8FF00]/10 text-[#E8FF00]"
-                          : "bg-zinc-800 text-zinc-400"
+                          ? "bg-[#FDF5AA]/10 text-[#FDF5AA]"
+                          : "bg-[#113F67] text-slate-300"
                       }`}
                     >
                       {user.role === "ADMIN" ? (
@@ -136,17 +136,17 @@ export default function AdminUsersPage() {
                       {user.role}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-sm text-zinc-400">
+                  <td className="px-4 py-3 text-sm text-slate-300">
                     {user._count.bookings}
                   </td>
-                  <td className="px-4 py-3 text-xs text-zinc-500">
+                  <td className="px-4 py-3 text-xs text-slate-400">
                     {formatDate(user.createdAt)}
                   </td>
                   <td className="px-4 py-3">
                     <button
                       onClick={() => handleRoleToggle(user.id, user.role)}
                       disabled={updating === user.id}
-                      className="rounded-lg border border-white/10 px-3 py-1 text-xs text-zinc-400 hover:border-white/20 hover:text-white transition-colors disabled:opacity-50"
+                      className="rounded-lg border border-white/10 px-3 py-1 text-xs text-slate-300 hover:border-white/20 hover:text-white transition-colors disabled:opacity-50"
                     >
                       {updating === user.id ? (
                         <Loader2 className="h-3 w-3 animate-spin" />
@@ -163,7 +163,7 @@ export default function AdminUsersPage() {
           </table>
 
           {filtered.length === 0 && (
-            <div className="py-16 text-center text-zinc-500">No users found</div>
+            <div className="py-16 text-center text-slate-400">No users found</div>
           )}
         </div>
       )}

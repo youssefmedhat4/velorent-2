@@ -51,17 +51,17 @@ export function StarRating({
               className={cn(
                 sizeClasses[size],
                 filled
-                  ? "fill-[#E8FF00] text-[#E8FF00]"
+                  ? "fill-[#FDF5AA] text-[#FDF5AA]"
                   : partial
-                  ? "fill-[#E8FF00]/50 text-[#E8FF00]/50"
-                  : "fill-zinc-700 text-zinc-700"
+                  ? "fill-[#FDF5AA]/50 text-[#FDF5AA]/50"
+                  : "fill-zinc-700 text-slate-700"
               )}
             />
           </button>
         );
       })}
       {showValue && (
-        <span className="ml-1 text-sm font-medium text-zinc-300">
+        <span className="ml-1 text-sm font-medium text-slate-200">
           {rating.toFixed(1)}
         </span>
       )}

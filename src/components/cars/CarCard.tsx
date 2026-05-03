@@ -19,7 +19,7 @@ const categoryColors: Record<string, string> = {
   SPORTS: "bg-red-500/10 text-red-400 border-red-500/20",
   ELECTRIC: "bg-green-500/10 text-green-400 border-green-500/20",
   SUV: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-  ECONOMY: "bg-zinc-500/10 text-zinc-400 border-zinc-500/20",
+  ECONOMY: "bg-zinc-500/10 text-slate-300 border-zinc-500/20",
   COMPACT: "bg-purple-500/10 text-purple-400 border-purple-500/20",
   VAN: "bg-orange-500/10 text-orange-400 border-orange-500/20",
 };
@@ -36,7 +36,7 @@ export function CarCard({ car, index = 0 }: CarCardProps) {
       transition={{ duration: 0.4, delay: index * 0.05 }}
     >
       <Link href={`/cars/${car.id}`} className="group block">
-        <div className="relative overflow-hidden rounded-2xl border border-white/5 bg-[#111113] transition-all duration-300 hover:border-white/10 hover:shadow-2xl hover:shadow-black/50">
+        <div className="relative overflow-hidden rounded-2xl border border-white/5 bg-[#113F67] transition-all duration-300 hover:border-white/10 hover:shadow-2xl hover:shadow-black/50">
           {/* Image */}
           <div className="relative h-48 overflow-hidden">
             <Image
@@ -46,7 +46,7 @@ export function CarCard({ car, index = 0 }: CarCardProps) {
               className="object-cover transition-transform duration-500 group-hover:scale-105"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#111113] via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#113F67] via-transparent to-transparent" />
 
             {/* Category badge */}
             <div className="absolute left-3 top-3">
@@ -73,10 +73,10 @@ export function CarCard({ car, index = 0 }: CarCardProps) {
           <div className="p-4">
             <div className="flex items-start justify-between gap-2">
               <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">
+                <p className="text-xs font-medium uppercase tracking-wider text-slate-400">
                   {car.brand}
                 </p>
-                <h3 className="mt-0.5 font-semibold text-white group-hover:text-[#E8FF00] transition-colors line-clamp-1">
+                <h3 className="mt-0.5 font-semibold text-white group-hover:text-[#FDF5AA] transition-colors line-clamp-1">
                   {car.name}
                 </h3>
               </div>
@@ -84,7 +84,7 @@ export function CarCard({ car, index = 0 }: CarCardProps) {
                 <p className="text-lg font-bold text-white">
                   {formatCurrency(car.pricePerDay)}
                 </p>
-                <p className="text-xs text-zinc-500">/ day</p>
+                <p className="text-xs text-slate-400">/ day</p>
               </div>
             </div>
 
@@ -92,14 +92,14 @@ export function CarCard({ car, index = 0 }: CarCardProps) {
             {reviewCount > 0 && (
               <div className="mt-2 flex items-center gap-1.5">
                 <StarRating rating={rating} size="sm" />
-                <span className="text-xs text-zinc-500">
+                <span className="text-xs text-slate-400">
                   {rating.toFixed(1)} ({reviewCount})
                 </span>
               </div>
             )}
 
             {/* Specs */}
-            <div className="mt-3 flex items-center gap-3 text-xs text-zinc-500">
+            <div className="mt-3 flex items-center gap-3 text-xs text-slate-400">
               <span className="flex items-center gap-1">
                 <Users className="h-3 w-3" />
                 {car.seats}
@@ -113,7 +113,7 @@ export function CarCard({ car, index = 0 }: CarCardProps) {
                 {car.fuelType}
               </span>
               {car.location && (
-                <span className="ml-auto text-zinc-600 truncate max-w-[80px]">
+                <span className="ml-auto text-slate-500 truncate max-w-[80px]">
                   {car.location.city}
                 </span>
               )}
@@ -121,8 +121,8 @@ export function CarCard({ car, index = 0 }: CarCardProps) {
 
             {/* CTA */}
             <div className="mt-4 flex items-center justify-between">
-              <span className="text-xs text-zinc-600">{car.year}</span>
-              <span className="flex items-center gap-1 text-xs font-medium text-[#E8FF00] opacity-0 transition-opacity group-hover:opacity-100">
+              <span className="text-xs text-slate-500">{car.year}</span>
+              <span className="flex items-center gap-1 text-xs font-medium text-[#FDF5AA] opacity-0 transition-opacity group-hover:opacity-100">
                 View details
                 <ArrowRight className="h-3 w-3" />
               </span>
@@ -130,7 +130,7 @@ export function CarCard({ car, index = 0 }: CarCardProps) {
           </div>
 
           {/* Hover glow */}
-          <div className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100 ring-1 ring-[#E8FF00]/20" />
+          <div className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100 ring-1 ring-[#FDF5AA]/20" />
         </div>
       </Link>
     </motion.div>

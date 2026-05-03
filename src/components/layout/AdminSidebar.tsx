@@ -35,7 +35,7 @@ export function AdminSidebar() {
     <motion.aside
       animate={{ width: collapsed ? 72 : 240 }}
       transition={{ duration: 0.2, ease: "easeInOut" }}
-      className="relative flex h-screen flex-col border-r border-white/5 bg-[#0D0D0F]"
+      className="relative flex h-screen flex-col border-r border-white/5 bg-[#0E2D4A]"
     >
       {/* Logo */}
       <div className="flex h-16 items-center border-b border-white/5 px-4">
@@ -48,7 +48,7 @@ export function AdminSidebar() {
               exit={{ opacity: 0 }}
               className="flex items-center gap-2"
             >
-              <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[#E8FF00]">
+              <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[#FDF5AA]">
                 <Car className="h-4 w-4 text-black" />
               </div>
               <span className="font-display text-sm font-black tracking-widest text-white">
@@ -61,7 +61,7 @@ export function AdminSidebar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex h-7 w-7 items-center justify-center rounded-md bg-[#E8FF00]"
+              className="flex h-7 w-7 items-center justify-center rounded-md bg-[#FDF5AA]"
             >
               <Car className="h-4 w-4 text-black" />
             </motion.div>
@@ -78,8 +78,8 @@ export function AdminSidebar() {
             className={cn(
               "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all",
               isActive(href, exact)
-                ? "bg-[#E8FF00]/10 text-[#E8FF00]"
-                : "text-zinc-400 hover:bg-white/5 hover:text-white"
+                ? "bg-[#FDF5AA]/10 text-[#FDF5AA]"
+                : "text-slate-300 hover:bg-white/5 hover:text-white"
             )}
           >
             <Icon className="h-4 w-4 shrink-0" />
@@ -103,14 +103,14 @@ export function AdminSidebar() {
       <div className="space-y-1 border-t border-white/5 p-3">
         <Link
           href="/"
-          className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-400 hover:bg-white/5 hover:text-white transition-all"
+          className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-all"
         >
           <Home className="h-4 w-4 shrink-0" />
           {!collapsed && <span>Back to Site</span>}
         </Link>
         <button
           onClick={() => signOut({ callbackUrl: "/" })}
-          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-400 hover:bg-red-500/10 hover:text-red-400 transition-all"
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-300 hover:bg-red-500/10 hover:text-red-400 transition-all"
         >
           <LogOut className="h-4 w-4 shrink-0" />
           {!collapsed && <span>Sign out</span>}
@@ -120,7 +120,7 @@ export function AdminSidebar() {
       {/* Collapse Toggle */}
       <button
         onClick={() => setCollapsed(!collapsed)}
-        className="absolute -right-3 top-20 flex h-6 w-6 items-center justify-center rounded-full border border-white/10 bg-[#0D0D0F] text-zinc-400 hover:text-white transition-colors"
+        className="absolute -right-3 top-20 flex h-6 w-6 items-center justify-center rounded-full border border-white/10 bg-[#0E2D4A] text-slate-300 hover:text-white transition-colors"
         aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
       >
         {collapsed ? (

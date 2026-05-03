@@ -1,90 +1,110 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { loadStripe } from "@stripe/stripe-js";
-import {
-  Elements,
-  PaymentElement,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Loader2, Lock, CheckCircle2 } from "lucide-react";
+import { Loader2, CheckCircle2, CreditCard, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? ""
-);
-
-interface CheckoutFormProps {
+interface StripeCheckoutProps {
   bookingId: string;
   totalPrice: number;
   onSuccess: () => void;
 }
 
-function CheckoutForm({ bookingId, totalPrice, onSuccess }: CheckoutFormProps) {
-  const stripe = useStripe();
-  const elements = useElements();
+export function StripeCheckout({ bookingId, totalPrice, onSuccess }: StripeCheckoutProps) {
   const [processing, setProcessing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [succeeded, setSucceeded] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!stripe || !elements) return;
-
+  const handleMockPayment = async () => {
     setProcessing(true);
     setError(null);
 
-    const { error: submitError } = await elements.submit();
-    if (submitError) {
-      setError(submitError.message ?? "Payment failed");
-      setProcessing(false);
-      return;
-    }
+    try {
+      const res = await fetch("/api/payments/create-intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bookingId }),
+      });
 
-    const { error: confirmError } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/bookings/${bookingId}?payment=success`,
-      },
-      redirect: "if_required",
-    });
+      const data = await res.json();
 
-    if (confirmError) {
-      setError(confirmError.message ?? "Payment failed");
-      setProcessing(false);
-    } else {
+      if (!data.success) {
+        throw new Error(data.error ?? "Payment failed");
+      }
+
       setSucceeded(true);
-      onSuccess();
+      // Short delay so the user sees the success state before the modal closes
+      setTimeout(() => onSuccess(), 1200);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Payment failed");
+    } finally {
+      setProcessing(false);
     }
   };
 
   if (succeeded) {
     return (
-      <div className="flex flex-col items-center gap-4 py-8 text-center">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="flex flex-col items-center gap-4 py-8 text-center"
+      >
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-500/10">
           <CheckCircle2 className="h-8 w-8 text-green-400" />
         </div>
         <div>
-          <h3 className="text-lg font-semibold text-white">Payment Successful!</h3>
-          <p className="mt-1 text-sm text-zinc-400">
-            Your booking has been confirmed. Check your email for details.
+          <h3 className="text-lg font-semibold text-white">Payment Confirmed!</h3>
+          <p className="mt-1 text-sm text-slate-400">
+            Your booking is confirmed. Check your email for details.
           </p>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-        <PaymentElement
-          options={{
-            layout: "tabs",
-          }}
-        />
+    <div className="space-y-6">
+      {/* Mock payment card UI */}
+      <div className="rounded-xl border border-[#34699A]/40 bg-[#0E2D4A] p-5 space-y-4">
+        <div className="flex items-center gap-2 mb-2">
+          <CreditCard className="h-4 w-4 text-[#58A0C8]" />
+          <span className="text-sm font-medium text-[#EEF4FA]">Payment Details</span>
+          <span className="ml-auto text-xs text-[#58A0C8] border border-[#58A0C8]/30 rounded px-2 py-0.5">
+            Demo Mode
+          </span>
+        </div>
+
+        {/* Fake card number field */}
+        <div className="space-y-3">
+          <div>
+            <label className="text-xs text-slate-400 mb-1 block">Card Number</label>
+            <div className="rounded-lg border border-[#34699A]/40 bg-[#113F67]/50 px-3 py-2.5 text-sm text-slate-300 font-mono tracking-widest">
+              4242 4242 4242 4242
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-xs text-slate-400 mb-1 block">Expiry</label>
+              <div className="rounded-lg border border-[#34699A]/40 bg-[#113F67]/50 px-3 py-2.5 text-sm text-slate-300">
+                12 / 28
+              </div>
+            </div>
+            <div>
+              <label className="text-xs text-slate-400 mb-1 block">CVC</label>
+              <div className="rounded-lg border border-[#34699A]/40 bg-[#113F67]/50 px-3 py-2.5 text-sm text-slate-300">
+                •••
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Price summary */}
+      <div className="flex items-center justify-between rounded-lg border border-[#34699A]/30 bg-[#113F67]/30 px-4 py-3">
+        <span className="text-sm text-slate-400">Total due today</span>
+        <span className="text-lg font-bold text-[#FDF5AA]">{formatCurrency(totalPrice)}</span>
       </div>
 
       {error && (
@@ -94,9 +114,9 @@ function CheckoutForm({ bookingId, totalPrice, onSuccess }: CheckoutFormProps) {
       )}
 
       <Button
-        type="submit"
-        disabled={!stripe || processing}
-        className="w-full bg-[#E8FF00] text-black font-bold hover:bg-[#d4e800]"
+        onClick={handleMockPayment}
+        disabled={processing}
+        className="w-full bg-[#FDF5AA] text-[#0B2540] font-bold hover:bg-[#e8e090]"
         size="lg"
       >
         {processing ? (
@@ -107,77 +127,15 @@ function CheckoutForm({ bookingId, totalPrice, onSuccess }: CheckoutFormProps) {
         ) : (
           <>
             <Lock className="mr-2 h-4 w-4" />
-            Pay {formatCurrency(totalPrice)}
+            Confirm Payment — {formatCurrency(totalPrice)}
           </>
         )}
       </Button>
 
-      <p className="flex items-center justify-center gap-1.5 text-xs text-zinc-600">
+      <p className="flex items-center justify-center gap-1.5 text-xs text-slate-500">
         <Lock className="h-3 w-3" />
-        Secured by Stripe. Your payment info is encrypted.
+        Demo mode — no real charge will be made
       </p>
-    </form>
-  );
-}
-
-interface StripeCheckoutProps {
-  bookingId: string;
-  totalPrice: number;
-  onSuccess: () => void;
-}
-
-export function StripeCheckout({ bookingId, totalPrice, onSuccess }: StripeCheckoutProps) {
-  const [clientSecret, setClientSecret] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetch("/api/payments/create-intent", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ bookingId }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setClientSecret(data.data.clientSecret);
-        } else {
-          setError(data.error ?? "Failed to initialize payment");
-        }
-      })
-      .catch(() => setError("Failed to initialize payment"))
-      .finally(() => setLoading(false));
-  }, [bookingId]);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-[#E8FF00]" />
-      </div>
-    );
-  }
-
-  if (error || !clientSecret) {
-    return (
-      <p className="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
-        {error ?? "Unable to load payment form"}
-      </p>
-    );
-  }
-
-  return (
-    <Elements
-      stripe={stripePromise}
-      options={{
-        clientSecret,
-        appearance: { theme: "night" },
-      }}
-    >
-      <CheckoutForm
-        bookingId={bookingId}
-        totalPrice={totalPrice}
-        onSuccess={onSuccess}
-      />
-    </Elements>
+    </div>
   );
 }

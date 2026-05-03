@@ -43,17 +43,17 @@ export function Navbar() {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         scrolled
-          ? "bg-[#0A0A0B]/95 backdrop-blur-md border-b border-white/5 shadow-lg"
+          ? "bg-[#0B2540]/95 backdrop-blur-md border-b border-[#34699A]/30 shadow-lg"
           : "bg-transparent"
       )}
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#E8FF00]">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#FDF5AA]">
             <Car className="h-5 w-5 text-black" />
           </div>
-          <span className="font-display text-xl font-black tracking-widest text-white group-hover:text-[#E8FF00] transition-colors">
+          <span className="font-display text-xl font-black tracking-widest text-white group-hover:text-[#FDF5AA] transition-colors">
             VELORENT
           </span>
         </Link>
@@ -69,8 +69,8 @@ export function Navbar() {
                 className={cn(
                   "text-sm font-medium transition-colors",
                   pathname === link.href
-                    ? "text-[#E8FF00]"
-                    : "text-zinc-400 hover:text-white"
+                    ? "text-[#FDF5AA]"
+                    : "text-slate-300 hover:text-white"
                 )}
               >
                 {link.label}
@@ -83,8 +83,8 @@ export function Navbar() {
               className={cn(
                 "text-sm font-medium transition-colors",
                 pathname.startsWith("/admin")
-                  ? "text-[#E8FF00]"
-                  : "text-zinc-400 hover:text-white"
+                  ? "text-[#FDF5AA]"
+                  : "text-slate-300 hover:text-white"
               )}
             >
               Admin
@@ -102,7 +102,7 @@ export function Navbar() {
               >
                 <Avatar className="h-6 w-6">
                   <AvatarImage src={user.image ?? undefined} alt={user.name} />
-                  <AvatarFallback className="bg-[#E8FF00] text-black text-xs font-bold">
+                  <AvatarFallback className="bg-[#FDF5AA] text-black text-xs font-bold">
                     {getInitials(user.name)}
                   </AvatarFallback>
                 </Avatar>
@@ -116,19 +116,19 @@ export function Navbar() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 8, scale: 0.95 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute right-0 top-full mt-2 w-48 rounded-xl border border-white/10 bg-[#111113] shadow-xl"
+                    className="absolute right-0 top-full mt-2 w-48 rounded-xl border border-white/10 bg-[#113F67] shadow-xl"
                   >
                     <div className="p-1">
                       <Link
                         href="/profile"
-                        className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-white"
+                        className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-200 hover:bg-white/5 hover:text-white"
                       >
                         <User className="h-4 w-4" />
                         Profile
                       </Link>
                       <Link
                         href="/bookings"
-                        className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-white"
+                        className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-200 hover:bg-white/5 hover:text-white"
                       >
                         <BookOpen className="h-4 w-4" />
                         My Bookings
@@ -136,7 +136,7 @@ export function Navbar() {
                       {user.role === "ADMIN" && (
                         <Link
                           href="/admin"
-                          className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-white"
+                          className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-200 hover:bg-white/5 hover:text-white"
                         >
                           <LayoutDashboard className="h-4 w-4" />
                           Dashboard
@@ -158,12 +158,12 @@ export function Navbar() {
           ) : (
             <>
               <Link href="/login">
-                <Button variant="ghost" size="sm" className="text-zinc-300 hover:text-white hover:bg-white/5">
+                <Button variant="ghost" size="sm" className="text-slate-200 hover:text-white hover:bg-white/5">
                   Sign in
                 </Button>
               </Link>
               <Link href="/register">
-                <Button size="sm" className="bg-[#E8FF00] text-black font-semibold hover:bg-[#d4e800]">
+                <Button size="sm" className="bg-[#FDF5AA] text-black font-semibold hover:bg-[#e8e090]">
                   Get Started
                 </Button>
               </Link>
@@ -173,7 +173,7 @@ export function Navbar() {
 
         {/* Mobile Menu Button */}
         <button
-          className="flex items-center justify-center rounded-lg p-2 text-zinc-400 hover:text-white md:hidden"
+          className="flex items-center justify-center rounded-lg p-2 text-slate-300 hover:text-white md:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
         >
@@ -188,7 +188,7 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="border-t border-white/5 bg-[#0A0A0B]/98 backdrop-blur-md md:hidden"
+            className="border-t border-white/5 bg-[#0B2540]/98 backdrop-blur-md md:hidden"
           >
             <div className="space-y-1 px-4 py-4">
               {navLinks.map((link) => {
@@ -197,7 +197,7 @@ export function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="block rounded-lg px-3 py-2 text-sm font-medium text-zinc-300 hover:bg-white/5 hover:text-white"
+                    className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-200 hover:bg-white/5 hover:text-white"
                   >
                     {link.label}
                   </Link>
@@ -206,7 +206,7 @@ export function Navbar() {
               {user?.role === "ADMIN" && (
                 <Link
                   href="/admin"
-                  className="block rounded-lg px-3 py-2 text-sm font-medium text-zinc-300 hover:bg-white/5 hover:text-white"
+                  className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-200 hover:bg-white/5 hover:text-white"
                 >
                   Admin Dashboard
                 </Link>
@@ -216,7 +216,7 @@ export function Navbar() {
                   <div className="space-y-1">
                     <Link
                       href="/profile"
-                      className="block rounded-lg px-3 py-2 text-sm text-zinc-300 hover:bg-white/5"
+                      className="block rounded-lg px-3 py-2 text-sm text-slate-200 hover:bg-white/5"
                     >
                       Profile
                     </Link>
@@ -230,12 +230,12 @@ export function Navbar() {
                 ) : (
                   <div className="flex gap-2">
                     <Link href="/login" className="flex-1">
-                      <Button variant="outline" size="sm" className="w-full border-zinc-700 text-zinc-300">
+                      <Button variant="outline" size="sm" className="w-full border-[#34699A] text-slate-200">
                         Sign in
                       </Button>
                     </Link>
                     <Link href="/register" className="flex-1">
-                      <Button size="sm" className="w-full bg-[#E8FF00] text-black font-semibold">
+                      <Button size="sm" className="w-full bg-[#FDF5AA] text-black font-semibold">
                         Get Started
                       </Button>
                     </Link>

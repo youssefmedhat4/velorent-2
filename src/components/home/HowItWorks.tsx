@@ -29,14 +29,14 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section className="py-24 bg-[#0A0A0B]">
+    <section className="py-24 bg-[#0B2540]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-xs font-semibold uppercase tracking-widest text-[#E8FF00]"
+            className="text-xs font-semibold uppercase tracking-widest text-[#FDF5AA]"
           >
             Simple Process
           </motion.p>
@@ -54,7 +54,7 @@ export function HowItWorks() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="mt-4 text-zinc-500 max-w-md mx-auto"
+            className="mt-4 text-slate-400 max-w-md mx-auto"
           >
             Getting behind the wheel of your dream car takes just three simple steps.
           </motion.p>
@@ -75,17 +75,17 @@ export function HowItWorks() {
                 <div className="absolute top-10 left-full hidden w-full -translate-x-1/2 border-t border-dashed border-white/10 md:block" />
               )}
 
-              <div className="rounded-2xl border border-white/5 bg-[#111113] p-8 transition-colors hover:border-white/10">
+              <div className="rounded-2xl border border-white/5 bg-[#113F67] p-8 transition-colors hover:border-white/10">
                 <div className="mb-6 flex items-center justify-between">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#E8FF00]/10">
-                    <step.icon className="h-6 w-6 text-[#E8FF00]" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#FDF5AA]/10">
+                    <step.icon className="h-6 w-6 text-[#FDF5AA]" />
                   </div>
                   <span className="font-display text-5xl font-black text-white/5">
                     {step.step}
                   </span>
                 </div>
                 <h3 className="text-lg font-semibold text-white">{step.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-zinc-500">
+                <p className="mt-2 text-sm leading-relaxed text-slate-400">
                   {step.description}
                 </p>
               </div>

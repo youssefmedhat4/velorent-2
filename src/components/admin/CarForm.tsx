@@ -132,7 +132,7 @@ export function CarForm({ car, mode }: CarFormProps) {
   };
 
   const selectClass =
-    "w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none focus:border-[#E8FF00]/30 [&>option]:bg-[#111113]";
+    "w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none focus:border-[#FDF5AA]/30 [&>option]:bg-[#113F67]";
 
   return (
     <div className="p-8">
@@ -140,7 +140,7 @@ export function CarForm({ car, mode }: CarFormProps) {
         <Button
           variant="ghost"
           onClick={() => router.back()}
-          className="text-zinc-400 hover:text-white"
+          className="text-slate-300 hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" />
         </Button>
@@ -153,14 +153,14 @@ export function CarForm({ car, mode }: CarFormProps) {
 
       <form onSubmit={handleSubmit(onSubmit)} className="max-w-3xl space-y-8">
         {/* Basic Info */}
-        <div className="rounded-2xl border border-white/5 bg-[#111113] p-6 space-y-4">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-400">
+        <div className="rounded-2xl border border-white/5 bg-[#113F67] p-6 space-y-4">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-300">
             Basic Information
           </h2>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <Label className="text-zinc-400">Car Name</Label>
+              <Label className="text-slate-300">Car Name</Label>
               <Input
                 {...register("name")}
                 placeholder="e.g. Lamborghini Huracán"
@@ -169,7 +169,7 @@ export function CarForm({ car, mode }: CarFormProps) {
               {errors.name && <p className="mt-1 text-xs text-red-400">{errors.name.message}</p>}
             </div>
             <div>
-              <Label className="text-zinc-400">Brand</Label>
+              <Label className="text-slate-300">Brand</Label>
               <Input
                 {...register("brand")}
                 placeholder="e.g. Lamborghini"
@@ -178,7 +178,7 @@ export function CarForm({ car, mode }: CarFormProps) {
               {errors.brand && <p className="mt-1 text-xs text-red-400">{errors.brand.message}</p>}
             </div>
             <div>
-              <Label className="text-zinc-400">Model</Label>
+              <Label className="text-slate-300">Model</Label>
               <Input
                 {...register("model")}
                 placeholder="e.g. Huracán EVO"
@@ -186,7 +186,7 @@ export function CarForm({ car, mode }: CarFormProps) {
               />
             </div>
             <div>
-              <Label className="text-zinc-400">Year</Label>
+              <Label className="text-slate-300">Year</Label>
               <Input
                 {...register("year", { valueAsNumber: true })}
                 type="number"
@@ -196,7 +196,7 @@ export function CarForm({ car, mode }: CarFormProps) {
               />
             </div>
             <div>
-              <Label className="text-zinc-400">Color</Label>
+              <Label className="text-slate-300">Color</Label>
               <Input
                 {...register("color")}
                 placeholder="e.g. Matte Black"
@@ -204,7 +204,7 @@ export function CarForm({ car, mode }: CarFormProps) {
               />
             </div>
             <div>
-              <Label className="text-zinc-400">Price per Day ($)</Label>
+              <Label className="text-slate-300">Price per Day ($)</Label>
               <Input
                 {...register("pricePerDay", { valueAsNumber: true })}
                 type="number"
@@ -217,26 +217,26 @@ export function CarForm({ car, mode }: CarFormProps) {
           </div>
 
           <div>
-            <Label className="text-zinc-400">Description</Label>
+            <Label className="text-slate-300">Description</Label>
             <textarea
               {...register("description")}
               rows={4}
               placeholder="Describe the vehicle..."
-              className="mt-1.5 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-zinc-500 outline-none focus:border-[#E8FF00]/30 resize-none"
+              className="mt-1.5 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-zinc-500 outline-none focus:border-[#FDF5AA]/30 resize-none"
             />
             {errors.description && <p className="mt-1 text-xs text-red-400">{errors.description.message}</p>}
           </div>
         </div>
 
         {/* Specs */}
-        <div className="rounded-2xl border border-white/5 bg-[#111113] p-6 space-y-4">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-400">
+        <div className="rounded-2xl border border-white/5 bg-[#113F67] p-6 space-y-4">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-300">
             Specifications
           </h2>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div>
-              <Label className="text-zinc-400">Category</Label>
+              <Label className="text-slate-300">Category</Label>
               <select {...register("category")} className={`mt-1.5 ${selectClass}`}>
                 {Object.values(CarCategory).map((c) => (
                   <option key={c} value={c}>{c}</option>
@@ -244,7 +244,7 @@ export function CarForm({ car, mode }: CarFormProps) {
               </select>
             </div>
             <div>
-              <Label className="text-zinc-400">Transmission</Label>
+              <Label className="text-slate-300">Transmission</Label>
               <select {...register("transmission")} className={`mt-1.5 ${selectClass}`}>
                 {Object.values(Transmission).map((t) => (
                   <option key={t} value={t}>{t}</option>
@@ -252,7 +252,7 @@ export function CarForm({ car, mode }: CarFormProps) {
               </select>
             </div>
             <div>
-              <Label className="text-zinc-400">Fuel Type</Label>
+              <Label className="text-slate-300">Fuel Type</Label>
               <select {...register("fuelType")} className={`mt-1.5 ${selectClass}`}>
                 {Object.values(FuelType).map((f) => (
                   <option key={f} value={f}>{f}</option>
@@ -260,7 +260,7 @@ export function CarForm({ car, mode }: CarFormProps) {
               </select>
             </div>
             <div>
-              <Label className="text-zinc-400">Seats</Label>
+              <Label className="text-slate-300">Seats</Label>
               <Input
                 {...register("seats", { valueAsNumber: true })}
                 type="number"
@@ -270,7 +270,7 @@ export function CarForm({ car, mode }: CarFormProps) {
               />
             </div>
             <div>
-              <Label className="text-zinc-400">Mileage (km, optional)</Label>
+              <Label className="text-slate-300">Mileage (km, optional)</Label>
               <Input
                 {...register("mileage", { valueAsNumber: true })}
                 type="number"
@@ -283,9 +283,9 @@ export function CarForm({ car, mode }: CarFormProps) {
                 {...register("available")}
                 type="checkbox"
                 id="available"
-                className="h-4 w-4 rounded border-white/10 bg-white/5 accent-[#E8FF00]"
+                className="h-4 w-4 rounded border-white/10 bg-white/5 accent-[#FDF5AA]"
               />
-              <Label htmlFor="available" className="text-zinc-400 cursor-pointer">
+              <Label htmlFor="available" className="text-slate-300 cursor-pointer">
                 Available for booking
               </Label>
             </div>
@@ -293,8 +293,8 @@ export function CarForm({ car, mode }: CarFormProps) {
         </div>
 
         {/* Features */}
-        <div className="rounded-2xl border border-white/5 bg-[#111113] p-6 space-y-4">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-400">
+        <div className="rounded-2xl border border-white/5 bg-[#113F67] p-6 space-y-4">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-300">
             Features
           </h2>
           <div className="flex gap-2">
@@ -309,7 +309,7 @@ export function CarForm({ car, mode }: CarFormProps) {
               type="button"
               onClick={addFeature}
               variant="outline"
-              className="border-white/10 text-zinc-300 hover:bg-white/5"
+              className="border-white/10 text-slate-200 hover:bg-white/5"
             >
               <Plus className="h-4 w-4" />
             </Button>
@@ -318,13 +318,13 @@ export function CarForm({ car, mode }: CarFormProps) {
             {features.map((f, i) => (
               <span
                 key={i}
-                className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-zinc-300"
+                className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-200"
               >
                 {f}
                 <button
                   type="button"
                   onClick={() => removeFeature(i)}
-                  className="text-zinc-500 hover:text-red-400"
+                  className="text-slate-400 hover:text-red-400"
                 >
                   <X className="h-3 w-3" />
                 </button>
@@ -334,13 +334,13 @@ export function CarForm({ car, mode }: CarFormProps) {
         </div>
 
         {/* Images */}
-        <div className="rounded-2xl border border-white/5 bg-[#111113] p-6 space-y-4">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-400">
+        <div className="rounded-2xl border border-white/5 bg-[#113F67] p-6 space-y-4">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-300">
             Images
           </h2>
           <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-dashed border-white/20 p-4 hover:border-white/40 transition-colors">
-            <Upload className="h-5 w-5 text-zinc-400" />
-            <span className="text-sm text-zinc-400">
+            <Upload className="h-5 w-5 text-slate-300" />
+            <span className="text-sm text-slate-300">
               {uploading ? "Uploading..." : "Click to upload images"}
             </span>
             <input
@@ -379,7 +379,7 @@ export function CarForm({ car, mode }: CarFormProps) {
           <Button
             type="submit"
             disabled={isSubmitting || uploading}
-            className="bg-[#E8FF00] text-black font-bold hover:bg-[#d4e800]"
+            className="bg-[#FDF5AA] text-black font-bold hover:bg-[#e8e090]"
             size="lg"
           >
             {isSubmitting ? (
@@ -391,7 +391,7 @@ export function CarForm({ car, mode }: CarFormProps) {
             type="button"
             variant="outline"
             onClick={() => router.back()}
-            className="border-white/10 text-zinc-300 hover:bg-white/5"
+            className="border-white/10 text-slate-200 hover:bg-white/5"
             size="lg"
           >
             Cancel

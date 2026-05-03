@@ -2,13 +2,22 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0A0A0B;
-  --foreground: #ffffff;
-  --accent: #E8FF00;
-  --accent-blue: #00D4FF;
-  --card: #111113;
-  --border: rgba(255, 255, 255, 0.08);
-  --muted: #71717a;
+  /* VeloRent palette */
+  --navy:          #113F67;
+  --steel:         #34699A;
+  --sky:           #58A0C8;
+  --cream:         #FDF5AA;
+
+  --background:    #0B2540;
+  --surface:       #113F67;
+  --surface-2:     #163352;
+  --border:        rgba(52, 105, 154, 0.45);
+  --border-strong: rgba(88, 160, 200, 0.35);
+  --foreground:    #EEF4FA;
+  --muted:         #7BAAC8;
+  --accent:        #FDF5AA;
+  --accent-blue:   #58A0C8;
+  --radius:        0.75rem;
 }
 
 * {
@@ -41,11 +50,11 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(52, 105, 154, 0.5);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(88, 160, 200, 0.6);
 }
 
 /* Hide scrollbar utility */
@@ -59,47 +68,35 @@ body {
 
 /* Selection */
 ::selection {
-  background: rgba(232, 255, 0, 0.2);
-  color: #E8FF00;
+  background: rgba(253, 245, 170, 0.25);
+  color: #FDF5AA;
 }
 
 /* Focus ring */
 :focus-visible {
-  outline: 2px solid rgba(232, 255, 0, 0.5);
+  outline: 2px solid rgba(253, 245, 170, 0.5);
   outline-offset: 2px;
-}
-
-/* Carbon fiber texture */
-.carbon-texture {
-  background-image: 
-    repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 2px,
-      rgba(255,255,255,0.01) 2px,
-      rgba(255,255,255,0.01) 4px
-    );
 }
 
 /* Glassmorphism */
 .glass {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(17, 63, 103, 0.6);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(52, 105, 154, 0.4);
 }
 
 /* Glow effects */
-.glow-yellow {
-  box-shadow: 0 0 20px rgba(232, 255, 0, 0.15);
+.glow-cream {
+  box-shadow: 0 0 24px rgba(253, 245, 170, 0.2);
 }
 
-.glow-blue {
-  box-shadow: 0 0 20px rgba(0, 212, 255, 0.15);
+.glow-sky {
+  box-shadow: 0 0 24px rgba(88, 160, 200, 0.2);
 }
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, #E8FF00, #00D4FF);
+  background: linear-gradient(135deg, #FDF5AA, #58A0C8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -108,18 +105,11 @@ body {
 /* Page transitions */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .page-enter {
   animation: fadeIn 0.3s ease-out;
-}
-
-/* Shadcn overrides for dark theme */
-@layer base {
-  :root {
-    --radius: 0.75rem;
-  }
 }
 
 /* Custom utility for display font */

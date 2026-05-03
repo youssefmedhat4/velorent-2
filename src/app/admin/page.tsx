@@ -39,18 +39,18 @@ function StatCard({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
-      className="rounded-2xl border border-white/5 bg-[#111113] p-6"
+      className="rounded-2xl border border-white/5 bg-[#113F67] p-6"
     >
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">
+          <p className="text-xs font-medium uppercase tracking-wider text-slate-400">
             {title}
           </p>
           <p className="mt-2 text-3xl font-bold text-white">{value}</p>
-          {subtitle && <p className="mt-1 text-xs text-zinc-500">{subtitle}</p>}
+          {subtitle && <p className="mt-1 text-xs text-slate-400">{subtitle}</p>}
         </div>
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#E8FF00]/10">
-          <Icon className="h-5 w-5 text-[#E8FF00]" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FDF5AA]/10">
+          <Icon className="h-5 w-5 text-[#FDF5AA]" />
         </div>
       </div>
       {trend && (
@@ -81,7 +81,7 @@ export default function AdminDashboard() {
       <div className="p-8">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="h-32 animate-pulse rounded-2xl bg-zinc-900" />
+            <div key={i} className="h-32 animate-pulse rounded-2xl bg-[#0E2D4A]" />
           ))}
         </div>
       </div>
@@ -129,7 +129,7 @@ export default function AdminDashboard() {
         <h1 className="font-display text-4xl font-black uppercase text-white">
           Dashboard
         </h1>
-        <p className="mt-1 text-sm text-zinc-500">
+        <p className="mt-1 text-sm text-slate-400">
           Welcome back. Here&apos;s what&apos;s happening.
         </p>
       </div>
@@ -143,7 +143,7 @@ export default function AdminDashboard() {
 
       {/* Revenue Chart */}
       {stats?.revenueData && stats.revenueData.length > 0 && (
-        <div className="rounded-2xl border border-white/5 bg-[#111113] p-6">
+        <div className="rounded-2xl border border-white/5 bg-[#113F67] p-6">
           <h2 className="mb-6 text-lg font-semibold text-white">
             Revenue — Last 6 Months
           </h2>
@@ -158,14 +158,14 @@ export default function AdminDashboard() {
                       initial={{ height: 0 }}
                       animate={{ height: `${height}%` }}
                       transition={{ duration: 0.5, delay: i * 0.1 }}
-                      className="w-full rounded-t-lg bg-[#E8FF00]/20 hover:bg-[#E8FF00]/30 transition-colors relative group"
+                      className="w-full rounded-t-lg bg-[#FDF5AA]/20 hover:bg-[#FDF5AA]/30 transition-colors relative group"
                     >
-                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 hidden group-hover:block whitespace-nowrap rounded bg-zinc-800 px-2 py-1 text-xs text-white">
+                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 hidden group-hover:block whitespace-nowrap rounded bg-[#113F67] px-2 py-1 text-xs text-white">
                         {formatCurrency(point.revenue)}
                       </div>
                     </motion.div>
                   </div>
-                  <span className="text-xs text-zinc-500">{point.month}</span>
+                  <span className="text-xs text-slate-400">{point.month}</span>
                 </div>
               );
             })}
