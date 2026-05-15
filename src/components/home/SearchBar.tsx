@@ -16,6 +16,8 @@ export function SearchBar() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [category, setCategory] = useState("All");
+  const [startType, setStartType] = useState<"text" | "date">("text");
+  const [endType, setEndType] = useState<"text" | "date">("text");
 
   const handleSearch = () => {
     const params: Record<string, string> = {};
@@ -46,11 +48,14 @@ export function SearchBar() {
         <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
           <Calendar className="h-4 w-4 shrink-0 text-slate-300" />
           <input
-            type="date"
+            type={startType}
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
+            onFocus={() => setStartType("date")}
+            onBlur={() => { if (!startDate) setStartType("text"); }}
+            placeholder="Start date"
             min={format(new Date(), "yyyy-MM-dd")}
-            className="flex-1 bg-transparent text-sm text-white outline-none [color-scheme:dark]"
+            className="flex-1 bg-transparent text-sm text-white placeholder-zinc-500 outline-none [color-scheme:dark]"
           />
         </div>
 
@@ -58,11 +63,14 @@ export function SearchBar() {
         <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
           <Calendar className="h-4 w-4 shrink-0 text-slate-300" />
           <input
-            type="date"
+            type={endType}
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
+            onFocus={() => setEndType("date")}
+            onBlur={() => { if (!endDate) setEndType("text"); }}
+            placeholder="End date"
             min={startDate || format(new Date(), "yyyy-MM-dd")}
-            className="flex-1 bg-transparent text-sm text-white outline-none [color-scheme:dark]"
+            className="flex-1 bg-transparent text-sm text-white placeholder-zinc-500 outline-none [color-scheme:dark]"
           />
         </div>
 

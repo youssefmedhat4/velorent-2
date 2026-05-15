@@ -1,14 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { motion } from "framer-motion";
-import { CalendarDays, MapPin, CreditCard, Loader2, AlertCircle } from "lucide-react";
+import { CalendarDays, MapPin, CreditCard, Loader2, AlertCircle, LogIn, UserPlus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { DateRangePicker } from "./DateRangePicker";
 import { LocationPicker } from "./LocationPicker";
 import { formatCurrency, calculateDays } from "@/lib/utils";
@@ -16,17 +15,13 @@ import { useBookedDates } from "@/hooks/useBooking";
 import type { CarWithRelations } from "@/types";
 import type { Location } from "@prisma/client";
 
-const bookingFormSchema = z.object({
-  startDate: z.date().refine((d) => d >= new Date(), {
-    message: "Start date must be in the future",
-  }),
-  endDate: z.date(),
-  pickupLocationId: z.string().optional(),
-  dropoffLocationId: z.string().optional(),
-  notes: z.string().max(500).optional(),
-});
-
-type BookingFormValues = z.infer<typeof bookingFormSchema>;
+interface BookingFormValues {
+  startDate: Date | undefined;
+  endDate: Date | undefined;
+  pickupLocationId: string | undefined;
+  dropoffLocationId: string | undefined;
+  notes: string | undefined;
+}
 
 interface BookingFormProps {
   car: CarWithRelations;
@@ -39,14 +34,17 @@ export function BookingForm({ car, locations }: BookingFormProps) {
   const { bookedDates } = useBookedDates(car.id);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [dateError, setDateError] = useState<string | null>(null);
 
-  const {
-    control,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<BookingFormValues>({
-    resolver: zodResolver(bookingFormSchema),
+  const { control, handleSubmit, watch } = useForm<BookingFormValues>({
+    defaultValues: {
+      startDate: undefined,
+      endDate: undefined,
+      pickupLocationId: undefined,
+      dropoffLocationId: undefined,
+      notes: undefined,
+    },
   });
 
   const startDate = watch("startDate");
@@ -56,8 +54,17 @@ export function BookingForm({ car, locations }: BookingFormProps) {
   const totalPrice = totalDays * car.pricePerDay;
 
   const onSubmit = async (data: BookingFormValues) => {
-    if (!session) {
-      router.push(`/login?callbackUrl=/cars/${car.id}`);
+    setDateError(null);
+    if (!data.startDate) {
+      setDateError("Please select a start date.");
+      return;
+    }
+    if (!data.endDate) {
+      setDateError("Please select an end date.");
+      return;
+    }
+    if (data.endDate <= data.startDate) {
+      setDateError("End date must be after start date.");
       return;
     }
 
@@ -65,7 +72,6 @@ export function BookingForm({ car, locations }: BookingFormProps) {
     setError(null);
 
     try {
-      // Create booking
       const bookingRes = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -85,7 +91,6 @@ export function BookingForm({ car, locations }: BookingFormProps) {
         throw new Error(bookingData.error ?? "Failed to create booking");
       }
 
-      // Redirect to booking page for payment
       router.push(`/bookings/${bookingData.data.id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -133,11 +138,12 @@ export function BookingForm({ car, locations }: BookingFormProps) {
                 control={control}
                 render={({ field: endField }) => (
                   <DateRangePicker
-                    startDate={startField.value}
-                    endDate={endField.value}
+                    startDate={startField.value ?? null}
+                    endDate={endField.value ?? null}
                     onChange={(start, end) => {
-                      startField.onChange(start);
-                      endField.onChange(end);
+                      startField.onChange(start ?? undefined);
+                      endField.onChange(end ?? undefined);
+                      setDateError(null);
                     }}
                     bookedRanges={bookedDates}
                   />
@@ -145,10 +151,8 @@ export function BookingForm({ car, locations }: BookingFormProps) {
               />
             )}
           />
-          {(errors.startDate || errors.endDate) && (
-            <p className="mt-1 text-xs text-red-400">
-              {errors.startDate?.message ?? errors.endDate?.message}
-            </p>
+          {dateError && (
+            <p className="mt-1 text-xs text-red-400">{dateError}</p>
           )}
         </div>
 
@@ -208,7 +212,7 @@ export function BookingForm({ car, locations }: BookingFormProps) {
           </div>
         )}
 
-        {/* Error */}
+        {/* API Error */}
         {error && (
           <div className="flex items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2">
             <AlertCircle className="h-4 w-4 shrink-0 text-red-400" />
@@ -217,7 +221,8 @@ export function BookingForm({ car, locations }: BookingFormProps) {
         )}
 
         <Button
-          type="submit"
+          type={session ? "submit" : "button"}
+          onClick={!session ? () => setAuthModalOpen(true) : undefined}
           disabled={submitting || !car.available}
           className="w-full bg-[#FDF5AA] text-black font-bold hover:bg-[#e8e090] disabled:opacity-50"
           size="lg"
@@ -246,6 +251,53 @@ export function BookingForm({ car, locations }: BookingFormProps) {
           No charge until confirmed. Free cancellation before pickup.
         </p>
       </form>
+
+      {/* Auth Modal */}
+      <Dialog open={authModalOpen} onOpenChange={setAuthModalOpen}>
+        <DialogContent className="border border-white/10 bg-[#0E2D4A] p-0 sm:max-w-md">
+          <div className="p-6">
+            <button
+              onClick={() => setAuthModalOpen(false)}
+              className="absolute right-4 top-4 rounded-lg p-1 text-slate-400 transition-colors hover:bg-white/10 hover:text-white"
+            >
+              <X className="h-4 w-4" />
+            </button>
+
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#FDF5AA]/10">
+              <CreditCard className="h-6 w-6 text-[#FDF5AA]" />
+            </div>
+
+            <h2 className="text-xl font-bold text-white">Sign in to book</h2>
+            <p className="mt-2 text-sm text-slate-400">
+              You need an account to reserve this car. It only takes a minute to get started.
+            </p>
+
+            <div className="mt-6 flex flex-col gap-3">
+              <Button
+                onClick={() => router.push(`/login?callbackUrl=/cars/${car.id}`)}
+                className="w-full bg-[#FDF5AA] text-black font-bold hover:bg-[#e8e090]"
+                size="lg"
+              >
+                <LogIn className="mr-2 h-4 w-4" />
+                Sign In
+              </Button>
+              <Button
+                onClick={() => router.push(`/register?callbackUrl=/cars/${car.id}`)}
+                variant="outline"
+                className="w-full border-white/10 bg-white/5 text-white hover:bg-white/10"
+                size="lg"
+              >
+                <UserPlus className="mr-2 h-4 w-4" />
+                Create an Account
+              </Button>
+            </div>
+
+            <p className="mt-4 text-center text-xs text-slate-500">
+              Free to join. No credit card required to sign up.
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </motion.div>
   );
 }

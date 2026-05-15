@@ -82,19 +82,21 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Try sending confirmation email (won't fail if Resend isn't configured)
+    // Send payment confirmation email
     try {
       await sendBookingConfirmation({
         to: booking.user.email,
         userName: booking.user.name,
         carName: booking.car.name,
+        carBrand: booking.car.brand,
         startDate: booking.startDate,
         endDate: booking.endDate,
+        totalDays: booking.totalDays,
         totalPrice: booking.totalPrice,
         bookingId: booking.id,
       });
-    } catch {
-      // Email is optional — don't fail the payment if Resend isn't set up
+    } catch (emailError) {
+      console.error("[PAYMENT_EMAIL_ERROR]", emailError);
     }
 
     return NextResponse.json({

@@ -25,7 +25,7 @@ const footerLinks = {
 };
 
 const socialLinks = [
-  { label: "Twitter", href: "#", symbol: "𝕏" },
+  { label: "Twitter", href: "https://x.com/velorent53530", symbol: "𝕏" },
   { label: "Instagram", href: "#", symbol: "◎" },
   { label: "LinkedIn", href: "#", symbol: "in" },
   { label: "GitHub", href: "#", symbol: "⌥" },

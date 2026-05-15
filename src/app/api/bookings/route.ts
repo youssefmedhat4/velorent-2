@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { createBookingSchema } from "@/validations/booking.schema";
 import { differenceInDays } from "date-fns";
+import { sendBookingReservation } from "@/lib/resend";
 
 export async function GET(req: NextRequest) {
   try {
@@ -142,10 +143,29 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    // Send reservation email (fire and forget — don't block the response)
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id as string },
+      select: { email: true, name: true },
+    });
+    if (user) {
+      sendBookingReservation({
+        to: user.email,
+        userName: user.name,
+        carName: booking.car.name,
+        carBrand: booking.car.brand,
+        startDate: booking.startDate,
+        endDate: booking.endDate,
+        totalDays: booking.totalDays,
+        totalPrice: booking.totalPrice,
+        bookingId: booking.id,
+        pickupLocation: booking.pickupLocation?.city,
+      }).catch((err) => console.error("[RESERVATION_EMAIL]", err));
+    }
+
     return NextResponse.json({ success: true, data: booking }, { status: 201 });
   } catch (error) {
-    console.error("[BOOKINGS_POST]", error);
-    return NextResponse.json(
+    console.error("[BOOKINGS_POST]", error);    return NextResponse.json(
       { success: false, error: "Internal server error", code: "INTERNAL_ERROR" },
       { status: 500 }
     );

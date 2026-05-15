@@ -37,7 +37,9 @@ export function DateRangePicker({
 
   const handleSelect = (range: DateRange | undefined) => {
     onChange(range?.from ?? null, range?.to ?? null);
-    if (range?.from && range?.to) setOpen(false);
+    if (range?.from && range?.to) {
+      setOpen(false);
+    }
   };
 
   return (

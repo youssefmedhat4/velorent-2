@@ -57,14 +57,16 @@ export async function POST(req: NextRequest) {
           },
         });
 
-        // Send confirmation email
+        // Send payment confirmation email
         try {
           await sendBookingConfirmation({
             to: booking.user.email,
             userName: booking.user.name,
             carName: booking.car.name,
+            carBrand: booking.car.brand,
             startDate: booking.startDate,
             endDate: booking.endDate,
+            totalDays: booking.totalDays,
             totalPrice: booking.totalPrice,
             bookingId: booking.id,
           });

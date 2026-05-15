@@ -1,36 +1,56 @@
 "use client";
 
-import { Suspense, useRef, useState } from "react";
+import { Suspense, useState, Component } from "react";
+import type { ReactNode } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Environment, ContactShadows, Float, Html } from "@react-three/drei";
 import { motion } from "framer-motion";
 import { SearchBar } from "./SearchBar";
 
+// ── Error boundary to catch WebGL / Three.js crashes ──────────────────────────
+class CanvasErrorBoundary extends Component<
+  { children: ReactNode; fallback: ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: ReactNode; fallback: ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  render() {
+    if (this.state.hasError) return this.props.fallback;
+    return this.props.children;
+  }
+}
+
+// ── Geometric car model ────────────────────────────────────────────────────────
 function HeroCarModel() {
   return (
     <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.3}>
-      {/* Placeholder geometric car shape when no GLB is loaded */}
       <group>
-        {/* Car body */}
         <mesh position={[0, 0, 0]} castShadow>
           <boxGeometry args={[3, 0.6, 1.4]} />
           <meshStandardMaterial color="#0E2D4A" metalness={0.9} roughness={0.1} />
         </mesh>
-        {/* Car roof */}
         <mesh position={[0, 0.55, 0]} castShadow>
           <boxGeometry args={[1.8, 0.5, 1.2]} />
           <meshStandardMaterial color="#163352" metalness={0.9} roughness={0.1} />
         </mesh>
-        {/* Wheels */}
-        {[[-1.1, -0.35, 0.8], [1.1, -0.35, 0.8], [-1.1, -0.35, -0.8], [1.1, -0.35, -0.8]].map(
-          ([x, y, z], i) => (
-            <mesh key={i} position={[x, y, z]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-              <cylinderGeometry args={[0.35, 0.35, 0.25, 32]} />
-              <meshStandardMaterial color="#0B2540" metalness={0.6} roughness={0.4} />
-            </mesh>
-          )
-        )}
-        {/* Accent strip */}
+        {(
+          [
+            [-1.1, -0.35, 0.8],
+            [1.1, -0.35, 0.8],
+            [-1.1, -0.35, -0.8],
+            [1.1, -0.35, -0.8],
+          ] as [number, number, number][]
+        ).map(([x, y, z], i) => (
+          <mesh key={i} position={[x, y, z]} rotation={[Math.PI / 2, 0, 0]} castShadow>
+            <cylinderGeometry args={[0.35, 0.35, 0.25, 32]} />
+            <meshStandardMaterial color="#0B2540" metalness={0.6} roughness={0.4} />
+          </mesh>
+        ))}
         <mesh position={[0, 0.05, 0.71]}>
           <boxGeometry args={[2.8, 0.05, 0.02]} />
           <meshStandardMaterial color="#FDF5AA" emissive="#FDF5AA" emissiveIntensity={0.5} />
@@ -48,6 +68,30 @@ function CanvasLoader() {
   );
 }
 
+// ── Static SVG fallback if WebGL crashes ──────────────────────────────────────
+function StaticCarIllustration() {
+  return (
+    <div className="flex h-full w-full items-center justify-center">
+      <svg viewBox="0 0 320 160" className="w-full max-w-xs opacity-80" fill="none">
+        <rect x="30" y="80" width="260" height="50" rx="10" fill="#0E2D4A" />
+        <rect x="90" y="48" width="140" height="40" rx="8" fill="#163352" />
+        <rect x="98" y="54" width="55" height="28" rx="4" fill="#1a4f7a" opacity="0.7" />
+        <rect x="162" y="54" width="60" height="28" rx="4" fill="#1a4f7a" opacity="0.7" />
+        <rect x="35" y="103" width="250" height="3" rx="1.5" fill="#FDF5AA" opacity="0.6" />
+        <circle cx="95" cy="135" r="22" fill="#0B2540" />
+        <circle cx="95" cy="135" r="13" fill="#163352" />
+        <circle cx="95" cy="135" r="5" fill="#FDF5AA" opacity="0.5" />
+        <circle cx="225" cy="135" r="22" fill="#0B2540" />
+        <circle cx="225" cy="135" r="13" fill="#163352" />
+        <circle cx="225" cy="135" r="5" fill="#FDF5AA" opacity="0.5" />
+        <rect x="282" y="90" width="12" height="8" rx="2" fill="#FDF5AA" opacity="0.8" />
+        <ellipse cx="160" cy="157" rx="120" ry="6" fill="#58A0C8" opacity="0.15" />
+      </svg>
+    </div>
+  );
+}
+
+// ── Main HeroSection ───────────────────────────────────────────────────────────
 export function HeroSection() {
   const [autoRotate, setAutoRotate] = useState(true);
 
@@ -57,7 +101,6 @@ export function HeroSection() {
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(88,160,200,0.08)_0%,_transparent_70%)]" />
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#58A0C8]/30 to-transparent" />
-        {/* Grid pattern */}
         <div
           className="absolute inset-0 opacity-[0.04]"
           style={{
@@ -101,7 +144,7 @@ export function HeroSection() {
         </motion.p>
       </div>
 
-      {/* 3D Canvas */}
+      {/* 3D Canvas — with error boundary fallback */}
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -110,35 +153,37 @@ export function HeroSection() {
         onMouseEnter={() => setAutoRotate(false)}
         onMouseLeave={() => setAutoRotate(true)}
       >
-        <Canvas
-          camera={{ position: [5, 2, 5], fov: 40 }}
-          shadows
-          gl={{ antialias: true, alpha: true }}
-        >
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[5, 5, 5]} intensity={1.5} castShadow />
-          <directionalLight position={[-5, 3, -5]} intensity={0.5} color="#58A0C8" />
-          <pointLight position={[0, 5, 0]} intensity={0.5} color="#FDF5AA" />
+        <CanvasErrorBoundary fallback={<StaticCarIllustration />}>
+          <Canvas
+            camera={{ position: [5, 2, 5], fov: 40 }}
+            shadows
+            gl={{ antialias: true, alpha: true }}
+          >
+            <ambientLight intensity={0.5} />
+            <directionalLight position={[5, 5, 5]} intensity={1.5} castShadow />
+            <directionalLight position={[-5, 3, -5]} intensity={0.5} color="#58A0C8" />
+            <pointLight position={[0, 5, 0]} intensity={0.5} color="#FDF5AA" />
 
-          <Suspense fallback={<CanvasLoader />}>
-            <HeroCarModel />
-            <Environment preset="city" />
-            <ContactShadows
-              position={[0, -0.8, 0]}
-              opacity={0.3}
-              scale={12}
-              blur={2.5}
+            <Suspense fallback={<CanvasLoader />}>
+              <HeroCarModel />
+              <Environment preset="city" />
+              <ContactShadows
+                position={[0, -0.8, 0]}
+                opacity={0.3}
+                scale={12}
+                blur={2.5}
+              />
+            </Suspense>
+
+            <OrbitControls
+              enablePan={false}
+              enableZoom={false}
+              maxPolarAngle={Math.PI / 2.2}
+              autoRotate={autoRotate}
+              autoRotateSpeed={1}
             />
-          </Suspense>
-
-          <OrbitControls
-            enablePan={false}
-            enableZoom={false}
-            maxPolarAngle={Math.PI / 2.2}
-            autoRotate={autoRotate}
-            autoRotateSpeed={1}
-          />
-        </Canvas>
+          </Canvas>
+        </CanvasErrorBoundary>
       </motion.div>
 
       {/* Search Bar */}
