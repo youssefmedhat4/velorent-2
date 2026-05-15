@@ -11,6 +11,8 @@ export const createBookingSchema = z
     pickupLocationId: z.string().cuid().optional(),
     dropoffLocationId: z.string().cuid().optional(),
     notes: z.string().max(500).optional(),
+    promoCode: z.string().max(32).optional(),
+    fromWishlist: z.boolean().optional(),
   })
   .refine((data) => data.endDate > data.startDate, {
     message: "End date must be after start date",

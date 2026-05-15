@@ -224,9 +224,19 @@ export default function BookingDetailPage({ params }: BookingDetailPageProps) {
                     {formatCurrency(car?.pricePerDay ?? 0)} × {booking.totalDays} days
                   </span>
                   <span className="text-white">
-                    {formatCurrency(booking.totalPrice)}
+                    {formatCurrency(booking.subtotalPrice)}
                   </span>
                 </div>
+                {booking.discountAmount > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-zinc-500">
+                      Discount{booking.promoCode ? ` (${booking.promoCode})` : ""}
+                    </span>
+                    <span className="text-green-400">
+                      −{formatCurrency(booking.discountAmount)}
+                    </span>
+                  </div>
+                )}
                 <div className="border-t border-white/5 pt-2 flex justify-between font-semibold">
                   <span className="text-white">Total</span>
                   <span className="text-[#E8FF00]">

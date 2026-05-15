@@ -48,6 +48,11 @@ enum FuelType {
   ELECTRIC
 }
 
+enum DiscountType {
+  PERCENT
+  FIXED
+}
+
 model User {
   id        String   @id @default(cuid())
   name      String
@@ -59,8 +64,10 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  bookings Booking[]
-  reviews  Review[]
+  bookings     Booking[]
+  reviews      Review[]
+  savedCars    SavedCar[]
+  promoUses    PromoRedemption[]
 
   @@map("users")
 }
@@ -103,9 +110,10 @@ model Car {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
-  location Location? @relation("CarLocation", fields: [locationId], references: [id])
-  bookings Booking[]
-  reviews  Review[]
+  location  Location?  @relation("CarLocation", fields: [locationId], references: [id])
+  bookings  Booking[]
+  reviews   Review[]
+  savedBy   SavedCar[]
 
   @@map("cars")
 }
@@ -119,7 +127,11 @@ model Booking {
   pickupLocationId  String?
   dropoffLocationId String?
   totalDays         Int
+  subtotalPrice     Float         @default(0)
+  discountAmount    Float         @default(0)
   totalPrice        Float
+  promoCode         String?
+  promoCodeId       String?
   status            BookingStatus @default(PENDING)
   paymentStatus     PaymentStatus @default(UNPAID)
   paymentIntentId   String?
@@ -133,6 +145,8 @@ model Booking {
   dropoffLocation Location? @relation("DropoffLocation", fields: [dropoffLocationId], references: [id])
   payment         Payment?
   review          Review?
+  promoCodeRef    PromoCode?        @relation(fields: [promoCodeId], references: [id], onDelete: SetNull)
+  promoRedemption PromoRedemption?
 
   @@map("bookings")
 }
@@ -167,4 +181,61 @@ model Review {
   booking Booking @relation(fields: [bookingId], references: [id])
 
   @@map("reviews")
+}
+
+model SavedCar {
+  id                    String    @id @default(cuid())
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                String
+  car                   Car       @relation(fields: [carId], references: [id], onDelete: Cascade)
+  carId                 String
+  note                  String?   @db.Text
+  draftStartDate        DateTime?
+  draftEndDate          DateTime?
+  draftPickupLocationId String?
+  draftDropoffLocationId String?
+  draftBookingNotes     String?   @db.Text
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@unique([userId, carId])
+  @@index([userId])
+  @@map("saved_cars")
+}
+
+model PromoCode {
+  id                 String       @id @default(cuid())
+  code               String       @unique
+  description        String
+  discountType       DiscountType
+  discountValue      Float
+  minOrderAmount     Float?
+  maxUses            Int?
+  usedCount          Int          @default(0)
+  validFrom          DateTime     @default(now())
+  validUntil         DateTime?
+  isActive           Boolean      @default(true)
+  requiresWishlist   Boolean      @default(false)
+  firstBookingOnly   Boolean      @default(false)
+  createdAt          DateTime     @default(now())
+
+  bookings    Booking[]
+  redemptions PromoRedemption[]
+
+  @@map("promo_codes")
+}
+
+model PromoRedemption {
+  id          String   @id @default(cuid())
+  userId      String
+  promoCodeId String
+  bookingId   String   @unique
+  createdAt   DateTime @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  promoCode PromoCode @relation(fields: [promoCodeId], references: [id], onDelete: Cascade)
+  booking   Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, promoCodeId])
+  @@map("promo_redemptions")
 }

@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Car, User, LogOut, LayoutDashboard, BookOpen } from "lucide-react";
+import { Menu, X, Car, User, LogOut, LayoutDashboard, BookOpen, Heart } from "lucide-react";
+import { WishlistNavLink } from "@/components/layout/WishlistNavLink";
 import { signOut, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -77,6 +78,7 @@ export function Navbar() {
               </Link>
             );
           })}
+          {user && <WishlistNavLink />}
           {user?.role === "ADMIN" && (
             <Link
               href="/admin"
@@ -132,6 +134,13 @@ export function Navbar() {
                       >
                         <BookOpen className="h-4 w-4" />
                         My Bookings
+                      </Link>
+                      <Link
+                        href="/wishlist"
+                        className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-200 hover:bg-white/5 hover:text-white"
+                      >
+                        <Heart className="h-4 w-4" />
+                        Wishlist
                       </Link>
                       {user.role === "ADMIN" && (
                         <Link
@@ -203,6 +212,12 @@ export function Navbar() {
                   </Link>
                 );
               })}
+              {user && (
+                <WishlistNavLink
+                  className="block rounded-lg px-3 py-2 hover:bg-white/5"
+                  onClick={() => setMobileOpen(false)}
+                />
+              )}
               {user?.role === "ADMIN" && (
                 <Link
                   href="/admin"

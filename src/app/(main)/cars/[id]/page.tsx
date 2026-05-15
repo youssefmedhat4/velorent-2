@@ -2,6 +2,11 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { Car3DViewer } from "@/components/cars/Car3DViewer";
+import { CarDetailHeader } from "@/components/cars/CarDetailHeader";
+import {
+  WishlistBookingWrapper,
+  BookingFormSuspense,
+} from "@/components/cars/WishlistBookingWrapper";
 import { BookingForm } from "@/components/booking/BookingForm";
 import { StarRating } from "@/components/shared/StarRating";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -105,21 +110,25 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
           </div>
 
           {/* Right: Details + Booking */}
+          <WishlistBookingWrapper>
           <div className="space-y-6">
             {/* Header */}
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <Badge
-                  variant="outline"
-                  className="border-[#E8FF00]/30 text-[#E8FF00] text-xs"
-                >
-                  {car.category}
-                </Badge>
-                {!car.available && (
-                  <Badge variant="destructive" className="text-xs">
-                    Unavailable
+              <div className="mb-2 flex items-start justify-between gap-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge
+                    variant="outline"
+                    className="border-[#E8FF00]/30 text-[#E8FF00] text-xs"
+                  >
+                    {car.category}
                   </Badge>
-                )}
+                  {!car.available && (
+                    <Badge variant="destructive" className="text-xs">
+                      Unavailable
+                    </Badge>
+                  )}
+                </div>
+                <CarDetailHeader carId={car.id} />
               </div>
               <h1 className="font-display text-4xl font-black uppercase text-white">
                 {car.name}
@@ -190,8 +199,14 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
             )}
 
             {/* Booking Form */}
-            <BookingForm car={{ ...car, averageRating } as CarWithRelations} locations={locations} />
+            <BookingFormSuspense>
+              <BookingForm
+                car={{ ...car, averageRating } as CarWithRelations}
+                locations={locations}
+              />
+            </BookingFormSuspense>
           </div>
+          </WishlistBookingWrapper>
         </div>
 
         {/* Reviews Section */}

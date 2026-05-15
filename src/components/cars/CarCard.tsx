@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Users, Fuel, Zap, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { WishlistButton } from "@/components/wishlist/WishlistButton";
 import { StarRating } from "@/components/shared/StarRating";
 import { formatCurrency } from "@/lib/utils";
 import type { CarWithRelations } from "@/types";
@@ -48,6 +49,12 @@ export function CarCard({ car, index = 0 }: CarCardProps) {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#113F67] via-transparent to-transparent" />
 
+            <WishlistButton
+              carId={car.id}
+              size="sm"
+              className="absolute right-3 top-3 z-10"
+            />
+
             {/* Category badge */}
             <div className="absolute left-3 top-3">
               <span
@@ -61,7 +68,7 @@ export function CarCard({ car, index = 0 }: CarCardProps) {
 
             {/* Available badge */}
             {!car.available && (
-              <div className="absolute right-3 top-3">
+              <div className="absolute left-3 top-12">
                 <Badge variant="destructive" className="text-xs">
                   Unavailable
                 </Badge>

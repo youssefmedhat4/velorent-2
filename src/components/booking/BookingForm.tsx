@@ -1,18 +1,31 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useForm, Controller } from "react-hook-form";
 import { motion } from "framer-motion";
-import { CalendarDays, MapPin, CreditCard, Loader2, AlertCircle, LogIn, UserPlus, X } from "lucide-react";
+import {
+  CalendarDays,
+  MapPin,
+  CreditCard,
+  Loader2,
+  AlertCircle,
+  LogIn,
+  UserPlus,
+  X,
+  Heart,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { DateRangePicker } from "./DateRangePicker";
 import { LocationPicker } from "./LocationPicker";
+import { PromoCodeInput } from "@/components/promo/PromoCodeInput";
 import { formatCurrency, calculateDays } from "@/lib/utils";
 import { useBookedDates } from "@/hooks/useBooking";
-import type { CarWithRelations } from "@/types";
+import { useWishlist } from "@/hooks/useWishlist";
+import { useWishlistDraft } from "@/contexts/WishlistDraftContext";
+import type { CarWithRelations, PromoPreview, WishlistDraft } from "@/types";
 import type { Location } from "@prisma/client";
 
 interface BookingFormValues {
@@ -28,16 +41,36 @@ interface BookingFormProps {
   locations: Location[];
 }
 
+function draftToFormValues(draft: WishlistDraft): Partial<BookingFormValues> {
+  return {
+    startDate: new Date(draft.startDate),
+    endDate: new Date(draft.endDate),
+    pickupLocationId: draft.pickupLocationId,
+    dropoffLocationId: draft.dropoffLocationId,
+    notes: draft.bookingNotes,
+  };
+}
+
 export function BookingForm({ car, locations }: BookingFormProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const fromWishlist = searchParams.get("from") === "wishlist";
   const { data: session } = useSession();
   const { bookedDates } = useBookedDates(car.id);
+  const { isSaved, updateWishlistEntry, initialized: wishlistReady } = useWishlist();
+  const { setDraft } = useWishlistDraft();
+
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [dateError, setDateError] = useState<string | null>(null);
+  const [draftLoaded, setDraftLoaded] = useState(false);
+  const [promo, setPromo] = useState<PromoPreview | null>(null);
+  const [promoError, setPromoError] = useState<string | null>(null);
+  const syncTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const promoRevalidateRef = useRef(0);
 
-  const { control, handleSubmit, watch } = useForm<BookingFormValues>({
+  const { control, handleSubmit, watch, reset } = useForm<BookingFormValues>({
     defaultValues: {
       startDate: undefined,
       endDate: undefined,
@@ -49,9 +82,115 @@ export function BookingForm({ car, locations }: BookingFormProps) {
 
   const startDate = watch("startDate");
   const endDate = watch("endDate");
+  const pickupLocationId = watch("pickupLocationId");
+  const dropoffLocationId = watch("dropoffLocationId");
+  const notes = watch("notes");
 
   const totalDays = startDate && endDate ? calculateDays(startDate, endDate) : 0;
-  const totalPrice = totalDays * car.pricePerDay;
+  const subtotal = totalDays * car.pricePerDay;
+  const totalPrice = promo ? promo.totalPrice : subtotal;
+  const saved = wishlistReady && isSaved(car.id);
+
+  const syncDraftToContext = useCallback(() => {
+    if (startDate && endDate) {
+      setDraft({
+        draftStartDate: startDate,
+        draftEndDate: endDate,
+        draftPickupLocationId: pickupLocationId,
+        draftDropoffLocationId: dropoffLocationId,
+        draftBookingNotes: notes,
+      });
+    } else {
+      setDraft(null);
+    }
+  }, [startDate, endDate, pickupLocationId, dropoffLocationId, notes, setDraft]);
+
+  useEffect(() => {
+    syncDraftToContext();
+  }, [syncDraftToContext]);
+
+  useEffect(() => {
+    if (!session?.user || draftLoaded) return;
+
+    const loadDraft = async () => {
+      try {
+        const res = await fetch(`/api/wishlist/${car.id}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.success && data.data.draft) {
+          reset(draftToFormValues(data.data.draft as WishlistDraft));
+        }
+      } finally {
+        setDraftLoaded(true);
+      }
+    };
+
+    loadDraft();
+  }, [session?.user, car.id, draftLoaded, reset]);
+
+  useEffect(() => {
+    if (!promo || !startDate || !endDate || !session) return;
+
+    const ticket = ++promoRevalidateRef.current;
+
+    const revalidate = async () => {
+      const res = await fetch("/api/promo/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code: promo.code,
+          carId: car.id,
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(),
+          fromWishlist: fromWishlist || saved,
+        }),
+      });
+      const data = await res.json();
+      if (ticket !== promoRevalidateRef.current) return;
+
+      if (data.success) {
+        setPromo(data.data as PromoPreview);
+        setPromoError(null);
+      } else {
+        setPromo(null);
+        setPromoError(data.error ?? "Promo no longer valid for these dates");
+      }
+    };
+
+    void revalidate();
+  }, [startDate, endDate, car.id, session, fromWishlist, saved, promo?.code]);
+
+  useEffect(() => {
+    if (!session?.user || !saved || !draftLoaded) return;
+    if (!startDate || !endDate) return;
+
+    if (syncTimerRef.current) clearTimeout(syncTimerRef.current);
+
+    syncTimerRef.current = setTimeout(() => {
+      updateWishlistEntry(car.id, {
+        draftStartDate: startDate,
+        draftEndDate: endDate,
+        draftPickupLocationId: pickupLocationId,
+        draftDropoffLocationId: dropoffLocationId,
+        draftBookingNotes: notes,
+      });
+    }, 800);
+
+    return () => {
+      if (syncTimerRef.current) clearTimeout(syncTimerRef.current);
+    };
+  }, [
+    session?.user,
+    saved,
+    draftLoaded,
+    car.id,
+    startDate,
+    endDate,
+    pickupLocationId,
+    dropoffLocationId,
+    notes,
+    updateWishlistEntry,
+  ]);
 
   const onSubmit = async (data: BookingFormValues) => {
     setDateError(null);
@@ -82,6 +221,8 @@ export function BookingForm({ car, locations }: BookingFormProps) {
           pickupLocationId: data.pickupLocationId,
           dropoffLocationId: data.dropoffLocationId,
           notes: data.notes,
+          promoCode: promo?.code,
+          fromWishlist: fromWishlist || saved,
         }),
       });
 
@@ -105,6 +246,13 @@ export function BookingForm({ car, locations }: BookingFormProps) {
       animate={{ opacity: 1, y: 0 }}
       className="rounded-2xl border border-white/10 bg-[#113F67] p-6"
     >
+      {fromWishlist && (
+        <div className="mb-4 flex items-center gap-2 rounded-lg border border-[#FDF5AA]/20 bg-[#FDF5AA]/5 px-3 py-2 text-xs text-[#FDF5AA]">
+          <Heart className="h-3.5 w-3.5 fill-current" />
+          Continuing from your wishlist — your saved dates are restored when available.
+        </div>
+      )}
+
       <div className="mb-6 flex items-baseline justify-between">
         <div>
           <span className="text-2xl font-bold text-white">
@@ -123,7 +271,6 @@ export function BookingForm({ car, locations }: BookingFormProps) {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {/* Dates */}
         <div>
           <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-slate-300">
             <CalendarDays className="h-3.5 w-3.5" />
@@ -156,7 +303,6 @@ export function BookingForm({ car, locations }: BookingFormProps) {
           )}
         </div>
 
-        {/* Pickup Location */}
         <div>
           <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-slate-300">
             <MapPin className="h-3.5 w-3.5" />
@@ -176,7 +322,6 @@ export function BookingForm({ car, locations }: BookingFormProps) {
           />
         </div>
 
-        {/* Dropoff Location */}
         <div>
           <label className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-slate-300">
             <MapPin className="h-3.5 w-3.5" />
@@ -196,15 +341,41 @@ export function BookingForm({ car, locations }: BookingFormProps) {
           />
         </div>
 
-        {/* Price breakdown */}
+        {session && totalDays > 0 && (
+          <PromoCodeInput
+            carId={car.id}
+            startDate={startDate}
+            endDate={endDate}
+            fromWishlist={fromWishlist || saved}
+            applied={promo}
+            onApplied={(next) => {
+              setPromo(next);
+              setPromoError(null);
+            }}
+          />
+        )}
+        {promoError && (
+          <p className="text-xs text-amber-400">{promoError}</p>
+        )}
+
         {totalDays > 0 && (
           <div className="rounded-xl border border-white/5 bg-white/5 p-4 space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-slate-300">
                 {formatCurrency(car.pricePerDay)} × {totalDays} days
               </span>
-              <span className="text-white">{formatCurrency(totalPrice)}</span>
+              <span className="text-white">{formatCurrency(subtotal)}</span>
             </div>
+            {promo && (
+              <div className="flex justify-between text-sm">
+                <span className="text-slate-300">
+                  Promo ({promo.code})
+                </span>
+                <span className="text-green-400">
+                  −{formatCurrency(promo.discountAmount)}
+                </span>
+              </div>
+            )}
             <div className="border-t border-white/10 pt-2 flex justify-between font-semibold">
               <span className="text-white">Total</span>
               <span className="text-[#FDF5AA]">{formatCurrency(totalPrice)}</span>
@@ -212,7 +383,6 @@ export function BookingForm({ car, locations }: BookingFormProps) {
           </div>
         )}
 
-        {/* API Error */}
         {error && (
           <div className="flex items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2">
             <AlertCircle className="h-4 w-4 shrink-0 text-red-400" />
@@ -252,7 +422,6 @@ export function BookingForm({ car, locations }: BookingFormProps) {
         </p>
       </form>
 
-      {/* Auth Modal */}
       <Dialog open={authModalOpen} onOpenChange={setAuthModalOpen}>
         <DialogContent className="border border-white/10 bg-[#0E2D4A] p-0 sm:max-w-md">
           <div className="p-6">

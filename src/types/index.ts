@@ -48,6 +48,34 @@ export type UserWithStats = User & {
   _count?: { bookings: number; reviews: number };
 };
 
+export type WishlistDraft = {
+  startDate: string;
+  endDate: string;
+  pickupLocationId?: string;
+  dropoffLocationId?: string;
+  bookingNotes?: string;
+};
+
+export type WishlistItem = {
+  id: string;
+  carId: string;
+  note: string | null;
+  savedAt: string | Date;
+  updatedAt: string | Date;
+  draft: WishlistDraft | null;
+  car: CarWithRelations;
+};
+
+export type PromoPreview = {
+  code: string;
+  description: string;
+  discountAmount: number;
+  subtotal: number;
+  totalPrice: number;
+  discountType: "PERCENT" | "FIXED";
+  discountValue: number;
+};
+
 // API Response types
 export interface ApiResponse<T = unknown> {
   success: boolean;

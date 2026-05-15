@@ -17,7 +17,11 @@ const proxy = auth((req: NextRequest & { auth?: { user?: { role?: string } } | n
   }
 
   // Protected user routes
-  if (pathname.startsWith("/bookings") || pathname.startsWith("/profile")) {
+  if (
+    pathname.startsWith("/bookings") ||
+    pathname.startsWith("/profile") ||
+    pathname.startsWith("/wishlist")
+  ) {
     if (!session) {
       return NextResponse.redirect(
         new URL(`/login?callbackUrl=${encodeURIComponent(pathname)}`, req.url)
@@ -31,5 +35,5 @@ const proxy = auth((req: NextRequest & { auth?: { user?: { role?: string } } | n
 export default proxy;
 
 export const config = {
-  matcher: ["/admin/:path*", "/bookings/:path*", "/profile/:path*"],
+  matcher: ["/admin/:path*", "/bookings/:path*", "/profile/:path*", "/wishlist"],
 };

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { createBookingSchema } from "@/validations/booking.schema";
 import { differenceInDays } from "date-fns";
 import { sendBookingReservation } from "@/lib/resend";
+import { validatePromoCode, redeemPromoCode } from "@/lib/promo";
 
 export async function GET(req: NextRequest) {
   try {
@@ -89,8 +90,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { carId, startDate, endDate, pickupLocationId, dropoffLocationId, notes } =
-      parsed.data;
+    const {
+      carId,
+      startDate,
+      endDate,
+      pickupLocationId,
+      dropoffLocationId,
+      notes,
+      promoCode,
+      fromWishlist,
+    } = parsed.data;
 
     // Check car exists and is available
     const car = await prisma.car.findUnique({ where: { id: carId } });
@@ -120,18 +129,50 @@ export async function POST(req: NextRequest) {
     }
 
     const totalDays = Math.max(1, differenceInDays(endDate, startDate));
-    const totalPrice = car.pricePerDay * totalDays;
+    const subtotalPrice = car.pricePerDay * totalDays;
+    const userId = session.user.id as string;
+
+    let discountAmount = 0;
+    let totalPrice = subtotalPrice;
+    let appliedPromoCode: string | null = null;
+    let appliedPromoCodeId: string | null = null;
+
+    if (promoCode?.trim()) {
+      const promoResult = await validatePromoCode({
+        code: promoCode,
+        userId,
+        carId,
+        subtotal: subtotalPrice,
+        fromWishlist,
+      });
+
+      if (!promoResult.success) {
+        return NextResponse.json(
+          { success: false, error: promoResult.error, code: promoResult.code },
+          { status: 400 }
+        );
+      }
+
+      discountAmount = promoResult.data.discountAmount;
+      totalPrice = promoResult.data.totalPrice;
+      appliedPromoCode = promoResult.data.promo.code;
+      appliedPromoCodeId = promoResult.data.promo.id;
+    }
 
     const booking = await prisma.booking.create({
       data: {
-        userId: session.user.id as string,
+        userId,
         carId,
         startDate,
         endDate,
         pickupLocationId,
         dropoffLocationId,
         totalDays,
+        subtotalPrice,
+        discountAmount,
         totalPrice,
+        promoCode: appliedPromoCode,
+        promoCodeId: appliedPromoCodeId,
         notes,
         status: "PENDING",
         paymentStatus: "UNPAID",
@@ -142,6 +183,14 @@ export async function POST(req: NextRequest) {
         dropoffLocation: true,
       },
     });
+
+    if (appliedPromoCodeId) {
+      await redeemPromoCode({
+        promoCodeId: appliedPromoCodeId,
+        userId,
+        bookingId: booking.id,
+      });
+    }
 
     // Send reservation email (fire and forget — don't block the response)
     const user = await prisma.user.findUnique({

@@ -1,4 +1,12 @@
-import { PrismaClient, CarCategory, Transmission, FuelType, BookingStatus, PaymentStatus } from "@prisma/client";
+import {
+  PrismaClient,
+  CarCategory,
+  Transmission,
+  FuelType,
+  BookingStatus,
+  PaymentStatus,
+  DiscountType,
+} from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
 import { addDays, subDays } from "date-fns";
@@ -18,8 +26,11 @@ async function main() {
 
   // Clean up
   await prisma.review.deleteMany();
+  await prisma.promoRedemption.deleteMany();
   await prisma.payment.deleteMany();
   await prisma.booking.deleteMany();
+  await prisma.savedCar.deleteMany();
+  await prisma.promoCode.deleteMany();
   await prisma.car.deleteMany();
   await prisma.location.deleteMany();
   await prisma.user.deleteMany();
@@ -482,8 +493,44 @@ async function main() {
   ];
 
   const bookings = await Promise.all(
-    bookingsData.map((data) => prisma.booking.create({ data }))
+    bookingsData.map((data) =>
+      prisma.booking.create({
+        data: {
+          ...data,
+          subtotalPrice: data.totalPrice,
+          discountAmount: 0,
+        },
+      })
+    )
   );
+
+  await prisma.promoCode.createMany({
+    data: [
+      {
+        code: "WISHLIST10",
+        description: "10% off when booking a wishlisted car",
+        discountType: DiscountType.PERCENT,
+        discountValue: 10,
+        requiresWishlist: true,
+      },
+      {
+        code: "WELCOME15",
+        description: "15% off your first rental",
+        discountType: DiscountType.PERCENT,
+        discountValue: 15,
+        firstBookingOnly: true,
+      },
+      {
+        code: "SAVE50",
+        description: "$50 off rentals over $200",
+        discountType: DiscountType.FIXED,
+        discountValue: 50,
+        minOrderAmount: 200,
+      },
+    ],
+  });
+
+  console.log("✅ Promo codes created (WISHLIST10, WELCOME15, SAVE50)");
 
   // Create payments for paid bookings
   await Promise.all(
