@@ -111,7 +111,7 @@ export function PromoCodeInput({
             setCode(e.target.value.toUpperCase());
             setError(null);
           }}
-          placeholder="e.g. WISHLIST10"
+          placeholder="ENTER PROMO CODE...."
           className="border-white/10 bg-white/5 text-white uppercase placeholder:normal-case placeholder:text-slate-500"
         />
         <Button
@@ -125,11 +125,6 @@ export function PromoCodeInput({
         </Button>
       </div>
       {error && <p className="text-xs text-red-400">{error}</p>}
-      <p className="text-xs text-slate-500">
-        <span className="text-slate-400">WISHLIST10</span> — 10% off (car on wishlist) ·{" "}
-        <span className="text-slate-400">WELCOME15</span> — 15% off first booking ·{" "}
-        <span className="text-slate-400">SAVE50</span> — $50 off orders $200+
-      </p>
     </div>
   );
 }

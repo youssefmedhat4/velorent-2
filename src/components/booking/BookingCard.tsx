@@ -12,10 +12,11 @@ import type { BookingWithRelations } from "@/types";
 interface BookingCardProps {
   booking: BookingWithRelations;
   onCancel?: (id: string) => void;
+  isLoading?: boolean;
   index?: number;
 }
 
-export function BookingCard({ booking, onCancel, index = 0 }: BookingCardProps) {
+export function BookingCard({ booking, onCancel, isLoading, index = 0 }: BookingCardProps) {
   const car = booking.car;
   const image = car?.images?.[0] ?? "/images/car-placeholder.jpg";
 
@@ -107,10 +108,20 @@ export function BookingCard({ booking, onCancel, index = 0 }: BookingCardProps) 
                   size="sm"
                   variant="ghost"
                   onClick={() => onCancel(booking.id)}
-                  className="text-red-400 hover:bg-red-500/10 hover:text-red-300"
+                  disabled={isLoading}
+                  className="text-red-400 hover:bg-red-500/10 hover:text-red-300 disabled:opacity-50"
                 >
-                  <X className="mr-1 h-3 w-3" />
-                  Cancel
+                  {isLoading ? (
+                    <>
+                      <div className="mr-1.5 h-3 w-3 animate-spin rounded-full border border-red-400/30 border-t-red-400" />
+                      Cancelling...
+                    </>
+                  ) : (
+                    <>
+                      <X className="mr-1 h-3 w-3" />
+                      Cancel
+                    </>
+                  )}
                 </Button>
               )}
           </div>

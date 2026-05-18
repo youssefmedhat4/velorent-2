@@ -131,6 +131,7 @@ export interface BookingFormData {
   pickupLocationId?: string;
   dropoffLocationId?: string;
   notes?: string;
+  promoCode?: string;
 }
 
 export interface CarFormData {

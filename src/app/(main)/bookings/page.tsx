@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { BookingCard } from "@/components/booking/BookingCard";
 import { PageLoader } from "@/components/shared/LoadingSpinner";
 import { useBookings } from "@/hooks/useBooking";
+import { showToast } from "@/components/shared/Toast";
 import { cn } from "@/lib/utils";
 import { Clock, Zap, CheckCircle2, XCircle } from "lucide-react";
 import type { BookingStatus } from "@prisma/client";
@@ -76,7 +77,16 @@ export default function BookingsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: "CANCELLED" }),
       });
-      if (res.ok) refetch();
+      const data = await res.json();
+      if (res.ok) {
+        showToast("Booking cancelled successfully", "success");
+        refetch();
+      } else {
+        showToast(data.error || "Failed to cancel booking", "error");
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "An error occurred";
+      showToast(message, "error");
     } finally {
       setCancelling(null);
     }
@@ -210,6 +220,7 @@ export default function BookingsPage() {
                   key={booking.id}
                   booking={booking}
                   onCancel={activeTab === "upcoming" ? handleCancel : undefined}
+                  isLoading={cancelling === booking.id}
                   index={i}
                 />
               ))}

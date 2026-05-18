@@ -210,6 +210,7 @@ model PromoCode {
   discountType       DiscountType
   discountValue      Float
   minOrderAmount     Float?
+  minRentalDays      Int?
   maxUses            Int?
   usedCount          Int          @default(0)
   validFrom          DateTime     @default(now())

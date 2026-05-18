@@ -5,10 +5,10 @@ import { Car } from "lucide-react";
 
 const footerLinks = {
   Company: [
-    { label: "About", href: "#" },
-    { label: "Careers", href: "#" },
-    { label: "Press", href: "#" },
-    { label: "Blog", href: "#" },
+    { label: "About", href: "/about" },
+    { label: "Careers", href: "/careers" },
+    { label: "Press", href: "/press" },
+    { label: "Blog", href: "/blog" },
   ],
   Services: [
     { label: "Browse Cars", href: "/cars" },

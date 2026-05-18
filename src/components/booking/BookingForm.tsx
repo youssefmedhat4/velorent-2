@@ -128,8 +128,16 @@ export function BookingForm({ car, locations }: BookingFormProps) {
     loadDraft();
   }, [session?.user, car.id, draftLoaded, reset]);
 
+  // Store the applied promo code string in a ref so the revalidation effect
+  // can read it without being listed as a reactive dependency (avoids infinite loop).
+  const appliedPromoCodeRef = useRef<string | null>(null);
   useEffect(() => {
-    if (!promo || !startDate || !endDate || !session) return;
+    appliedPromoCodeRef.current = promo?.code ?? null;
+  }, [promo?.code]);
+
+  useEffect(() => {
+    const code = appliedPromoCodeRef.current;
+    if (!code || !startDate || !endDate || !session) return;
 
     const ticket = ++promoRevalidateRef.current;
 
@@ -138,7 +146,7 @@ export function BookingForm({ car, locations }: BookingFormProps) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          code: promo.code,
+          code,
           carId: car.id,
           startDate: startDate.toISOString(),
           endDate: endDate.toISOString(),
@@ -158,7 +166,10 @@ export function BookingForm({ car, locations }: BookingFormProps) {
     };
 
     void revalidate();
-  }, [startDate, endDate, car.id, session, fromWishlist, saved, promo?.code]);
+    // Only re-run when dates or session change — promo object reference is intentionally
+    // excluded to prevent the infinite loop (we read it via ref instead).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [startDate, endDate, car.id, session, fromWishlist, saved]);
 
   useEffect(() => {
     if (!session?.user || !saved || !draftLoaded) return;

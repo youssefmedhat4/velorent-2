@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { carSchema } from "@/validations/car.schema";
+import { showToast } from "@/components/shared/Toast";
 import type { CarInput } from "@/validations/car.schema";
 import { CarCategory, Transmission, FuelType } from "@prisma/client";
 import type { CarWithRelations } from "@/types";
@@ -124,10 +125,13 @@ export function CarForm({ car, mode }: CarFormProps) {
       const result = await res.json();
       if (!result.success) throw new Error(result.error);
 
+      showToast(mode === "create" ? "Car added successfully" : "Car updated successfully", "success");
       router.push("/admin/cars");
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save car");
+      const message = err instanceof Error ? err.message : "Failed to save car";
+      setError(message);
+      showToast(message, "error");
     }
   };
 

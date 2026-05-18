@@ -4,6 +4,7 @@ import { useState } from "react";
 import { StickyNote, Loader2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useWishlist } from "@/hooks/useWishlist";
+import { showToast } from "@/components/shared/Toast";
 
 interface WishlistNoteEditorProps {
   carId: string;
@@ -25,8 +26,14 @@ export function WishlistNoteEditor({ carId, initialNote }: WishlistNoteEditorPro
       });
       if (ok) {
         setSaved(true);
+        showToast("Note saved", "success");
         setTimeout(() => setSaved(false), 2000);
+      } else {
+        showToast("Failed to save note", "error");
       }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to save note";
+      showToast(message, "error");
     } finally {
       setSaving(false);
     }

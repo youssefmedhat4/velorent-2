@@ -15,10 +15,11 @@ import type { WishlistItem } from "@/types";
 interface WishlistCardProps {
   item: WishlistItem;
   index?: number;
-  onRemove?: () => void;
+  onRemove?: () => void | Promise<void>;
+  isLoading?: boolean;
 }
 
-export function WishlistCard({ item, index = 0, onRemove }: WishlistCardProps) {
+export function WishlistCard({ item, index = 0, onRemove, isLoading }: WishlistCardProps) {
   const { car } = item;
   const image = car.images[0] ?? "/images/car-placeholder.jpg";
   const reviewCount = car._count?.reviews ?? 0;
@@ -126,11 +127,21 @@ export function WishlistCard({ item, index = 0, onRemove }: WishlistCardProps) {
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-zinc-400 hover:text-red-400"
+                className="text-zinc-400 hover:text-red-400 disabled:opacity-50"
                 onClick={onRemove}
+                disabled={isLoading}
               >
-                <Trash2 className="mr-1.5 h-4 w-4" />
-                Remove
+                {isLoading ? (
+                  <>
+                    <div className="mr-1.5 h-3 w-3 animate-spin rounded-full border border-zinc-400/30 border-t-zinc-400" />
+                    Removing...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="mr-1.5 h-4 w-4" />
+                    Remove
+                  </>
+                )}
               </Button>
               <Link href={`/cars/${car.id}?from=wishlist`}>
                 <Button

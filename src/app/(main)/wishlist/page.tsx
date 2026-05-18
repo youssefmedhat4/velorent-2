@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Heart, Car } from "lucide-react";
@@ -8,12 +8,25 @@ import { Button } from "@/components/ui/button";
 import { PageLoader } from "@/components/shared/LoadingSpinner";
 import { WishlistCard } from "@/components/wishlist/WishlistCard";
 import { useWishlist } from "@/hooks/useWishlist";
+import { showToast } from "@/components/shared/Toast";
 
 export default function WishlistPage() {
   const { items, loading, initialized, toggleSave, refetch } = useWishlist();
+  const [removingId, setRemovingId] = useState<string | null>(null);
 
   const handleRemove = async (carId: string) => {
-    await toggleSave(carId, { redirectOnAuth: "/wishlist" });
+    if (!confirm("Are you sure you want to remove this car from your wishlist?")) return;
+    setRemovingId(carId);
+    try {
+      const success = await toggleSave(carId, { redirectOnAuth: "/wishlist" });
+      if (success) {
+        showToast("Car removed from wishlist", "success");
+      } else {
+        showToast("Failed to remove car from wishlist", "error");
+      }
+    } finally {
+      setRemovingId(null);
+    }
   };
 
   useEffect(() => {
@@ -92,6 +105,7 @@ export default function WishlistPage() {
                 item={item}
                 index={index}
                 onRemove={() => handleRemove(item.carId)}
+                isLoading={removingId === item.carId}
               />
             ))}
           </div>

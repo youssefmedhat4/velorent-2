@@ -3,31 +3,44 @@ import { DiscountType, type PromoCode } from "@prisma/client";
 
 const DEFAULT_PROMO_CODES = [
   {
-    code: "WISHLIST10",
-    description: "10% off when booking a wishlisted car",
+    code: "WELCOME20",
+    description: "20% off your first rental",
     discountType: DiscountType.PERCENT,
-    discountValue: 10,
-    requiresWishlist: true,
-    firstBookingOnly: false,
+    discountValue: 20,
+    requiresWishlist: false,
+    firstBookingOnly: true,
     minOrderAmount: null as number | null,
+    minRentalDays: null as number | null,
   },
   {
-    code: "WELCOME15",
-    description: "15% off your first rental",
+    code: "LOYAL15",
+    description: "15% off for returning customers",
     discountType: DiscountType.PERCENT,
     discountValue: 15,
     requiresWishlist: false,
-    firstBookingOnly: true,
+    firstBookingOnly: false,
     minOrderAmount: null,
+    minRentalDays: null,
   },
   {
     code: "SAVE50",
-    description: "$50 off rentals over $200",
+    description: "$50 off orders over $200",
     discountType: DiscountType.FIXED,
     discountValue: 50,
     requiresWishlist: false,
     firstBookingOnly: false,
     minOrderAmount: 200,
+    minRentalDays: null,
+  },
+  {
+    code: "WEEK20",
+    description: "20% off rentals 7+ days",
+    discountType: DiscountType.PERCENT,
+    discountValue: 20,
+    requiresWishlist: false,
+    firstBookingOnly: false,
+    minOrderAmount: null,
+    minRentalDays: 7,
   },
 ] as const;
 
@@ -37,6 +50,14 @@ let promoSeedPromise: Promise<void> | null = null;
 export async function ensureDefaultPromoCodes(): Promise<void> {
   if (!promoSeedPromise) {
     promoSeedPromise = (async () => {
+      // Check how many of the default codes already exist to avoid unnecessary writes.
+      const existingCount = await prisma.promoCode.count({
+        where: { code: { in: DEFAULT_PROMO_CODES.map((p) => p.code) } },
+      });
+
+      // All codes are present — nothing to do.
+      if (existingCount === DEFAULT_PROMO_CODES.length) return;
+
       for (const promo of DEFAULT_PROMO_CODES) {
         await prisma.promoCode.upsert({
           where: { code: promo.code },
@@ -48,6 +69,7 @@ export async function ensureDefaultPromoCodes(): Promise<void> {
             requiresWishlist: promo.requiresWishlist,
             firstBookingOnly: promo.firstBookingOnly,
             minOrderAmount: promo.minOrderAmount,
+            minRentalDays: promo.minRentalDays,
           },
           update: {
             description: promo.description,
@@ -56,6 +78,7 @@ export async function ensureDefaultPromoCodes(): Promise<void> {
             requiresWishlist: promo.requiresWishlist,
             firstBookingOnly: promo.firstBookingOnly,
             minOrderAmount: promo.minOrderAmount,
+            minRentalDays: promo.minRentalDays,
             isActive: true,
           },
         });
@@ -97,6 +120,7 @@ export async function validatePromoCode(params: {
   userId: string;
   carId: string;
   subtotal: number;
+  totalDays: number;
   fromWishlist?: boolean;
 }): Promise<
   | { success: true; data: PromoValidationResult }
@@ -144,6 +168,14 @@ export async function validatePromoCode(params: {
     };
   }
 
+  if (promo.minRentalDays !== null && params.totalDays < promo.minRentalDays) {
+    return {
+      success: false,
+      error: `Minimum rental of ${promo.minRentalDays} days required`,
+      code: "MIN_RENTAL_NOT_MET",
+    };
+  }
+
   if (promo.requiresWishlist) {
     const hasWishlist =
       params.fromWishlist === true ||
@@ -161,14 +193,16 @@ export async function validatePromoCode(params: {
   }
 
   if (promo.firstBookingOnly) {
-    const priorPaidOrActive = await prisma.booking.findFirst({
+    // Only block on bookings that have been confirmed or progressed — a PENDING
+    // (unpaid, unconfirmed) booking should not disqualify a first-time user.
+    const priorConfirmedOrCompleted = await prisma.booking.findFirst({
       where: {
         userId: params.userId,
-        status: { in: ["PENDING", "CONFIRMED", "ACTIVE", "COMPLETED"] },
+        status: { in: ["CONFIRMED", "ACTIVE", "COMPLETED"] },
       },
       select: { id: true },
     });
-    if (priorPaidOrActive) {
+    if (priorConfirmedOrCompleted) {
       return {
         success: false,
         error: "This code is only valid before your first reservation",

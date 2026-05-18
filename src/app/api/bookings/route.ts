@@ -143,6 +143,7 @@ export async function POST(req: NextRequest) {
         userId,
         carId,
         subtotal: subtotalPrice,
+        totalDays,
         fromWishlist,
       });
 

@@ -22,6 +22,7 @@ import { StripeCheckout } from "@/components/payments/StripeCheckout";
 import { StarRating } from "@/components/shared/StarRating";
 import { PageLoader } from "@/components/shared/LoadingSpinner";
 import { useBooking } from "@/hooks/useBooking";
+import { showToast } from "@/components/shared/Toast";
 import {
   formatCurrency,
   formatDate,
@@ -61,12 +62,21 @@ export default function BookingDetailPage({ params }: BookingDetailPageProps) {
     if (!confirm("Cancel this booking?")) return;
     setCancelling(true);
     try {
-      await fetch(`/api/bookings/${id}`, {
+      const res = await fetch(`/api/bookings/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: "CANCELLED" }),
       });
-      router.refresh();
+      const data = await res.json();
+      if (res.ok) {
+        showToast("Booking cancelled successfully", "success");
+        router.push("/bookings");
+      } else {
+        showToast(data.error || "Failed to cancel booking", "error");
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "An error occurred";
+      showToast(message, "error");
     } finally {
       setCancelling(false);
     }
@@ -76,7 +86,7 @@ export default function BookingDetailPage({ params }: BookingDetailPageProps) {
     if (!booking) return;
     setReviewSubmitting(true);
     try {
-      await fetch("/api/reviews", {
+      const res = await fetch("/api/reviews", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -86,8 +96,17 @@ export default function BookingDetailPage({ params }: BookingDetailPageProps) {
           rating: selectedRating,
         }),
       });
-      setReviewOpen(false);
-      router.refresh();
+      const result = await res.json();
+      if (res.ok) {
+        showToast("Review submitted successfully", "success");
+        setReviewOpen(false);
+        router.refresh();
+      } else {
+        showToast(result.error || "Failed to submit review", "error");
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "An error occurred";
+      showToast(message, "error");
     } finally {
       setReviewSubmitting(false);
     }

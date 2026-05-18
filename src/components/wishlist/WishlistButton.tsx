@@ -5,6 +5,7 @@ import { Heart, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useWishlistDraftOptional } from "@/contexts/WishlistDraftContext";
+import { showToast } from "@/components/shared/Toast";
 
 interface WishlistButtonProps {
   carId: string;
@@ -34,10 +35,19 @@ export function WishlistButton({
     if (pending) return;
     setPending(true);
     try {
-      await toggleSave(carId, {
+      const result = await toggleSave(carId, {
         redirectOnAuth,
         draft: draftContext?.getDraftPayload(),
       });
+      if (result) {
+        if (saved) {
+          showToast("Removed from wishlist", "success");
+        } else {
+          showToast("Added to wishlist", "success");
+        }
+      } else {
+        showToast("Failed to update wishlist", "error");
+      }
     } finally {
       setPending(false);
     }

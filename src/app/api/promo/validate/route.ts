@@ -48,6 +48,7 @@ export async function POST(req: NextRequest) {
       userId,
       carId,
       subtotal,
+      totalDays,
       fromWishlist,
     });
 
