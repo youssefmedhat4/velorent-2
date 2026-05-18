@@ -100,7 +100,7 @@ Populates your database with test data: 1 admin, 5 users, 5 locations, 15 cars, 
 ```bash
 npm run db:seed
 ```
-
+  
 **Expected output:**
 ```
 Starting seed...

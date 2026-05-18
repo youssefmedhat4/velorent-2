@@ -13,6 +13,7 @@ import {
   ChevronRight,
   LogOut,
   Home,
+  Briefcase,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
@@ -22,6 +23,7 @@ const navItems = [
   { href: "/admin/cars", label: "Cars", icon: Car },
   { href: "/admin/bookings", label: "Bookings", icon: BookOpen },
   { href: "/admin/users", label: "Users", icon: Users },
+  { href: "/admin/careers", label: "Candidates", icon: Briefcase },
 ];
 
 export function AdminSidebar() {

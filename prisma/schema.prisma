@@ -68,6 +68,7 @@ model User {
   reviews      Review[]
   savedCars    SavedCar[]
   promoUses    PromoRedemption[]
+  applications JobApplication[]
 
   @@map("users")
 }
@@ -240,3 +241,42 @@ model PromoRedemption {
   @@unique([userId, promoCodeId])
   @@map("promo_redemptions")
 }
+
+// ─── Careers ────────────────────────────────────────────────────────────────
+
+enum ApplicationStatus {
+  PENDING
+  REVIEWING
+  SHORTLISTED
+  REJECTED
+  HIRED
+}
+
+model JobApplication {
+  id          String            @id @default(cuid())
+  // Applicant info
+  fullName    String
+  email       String
+  phone       String?
+  linkedIn    String?
+  portfolio   String?
+  // Role applied for
+  jobTitle    String
+  jobTeam     String
+  // Application content
+  coverLetter String?           @db.Text
+  cvUrl       String            // Cloudinary URL of uploaded CV
+  cvFileName  String            // Original filename for display
+  // Status tracking
+  status      ApplicationStatus @default(PENDING)
+  adminNotes  String?           @db.Text
+  // Optional link to a user account
+  userId      String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("job_applications")
+}
+

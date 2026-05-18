@@ -1,7 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, MapPin, Clock, Banknote } from "lucide-react";
+import { ApplicationForm } from "@/components/careers/ApplicationForm";
 
 const perks = [
   { emoji: "🚗", title: "Free rentals", description: "Use any car in our fleet on your days off." },
@@ -12,7 +14,7 @@ const perks = [
   { emoji: "🏖️", title: "Unlimited PTO", description: "Take the time you need. We trust you to manage your own schedule." },
 ];
 
-const openRoles = [
+export const openRoles = [
   {
     title: "Senior Full-Stack Engineer",
     team: "Engineering",
@@ -69,6 +71,8 @@ const teamColors: Record<string, string> = {
 };
 
 export default function CareersPage() {
+  const [applying, setApplying] = useState<{ title: string; team: string } | null>(null);
+
   return (
     <div className="min-h-screen bg-[#0B2540] pt-20">
       {/* ── Hero ── */}
@@ -214,7 +218,7 @@ export default function CareersPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.08 }}
-              className="group rounded-2xl border border-white/5 bg-[#113F67] p-6 transition-all hover:border-white/10"
+              className="group rounded-2xl border border-white/5 bg-[#113F67] p-6 transition-all hover:border-[#FDF5AA]/20"
             >
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div className="flex-1">
@@ -242,12 +246,12 @@ export default function CareersPage() {
                     </span>
                   </div>
                 </div>
-                <a
-                  href={`mailto:careers@velorent.com?subject=Application: ${encodeURIComponent(title)}`}
-                  className="shrink-0 self-start rounded-xl border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:border-[#FDF5AA]/30 hover:bg-[#FDF5AA]/10 hover:text-[#FDF5AA]"
+                <button
+                  onClick={() => setApplying({ title, team })}
+                  className="shrink-0 self-start rounded-xl border border-[#FDF5AA]/30 bg-[#FDF5AA]/10 px-5 py-2.5 text-sm font-semibold text-[#FDF5AA] transition-all hover:bg-[#FDF5AA] hover:text-[#0B2540]"
                 >
-                  Apply now
-                </a>
+                  Apply Now
+                </button>
               </div>
             </motion.div>
           ))}
@@ -291,6 +295,33 @@ export default function CareersPage() {
           </motion.div>
         </div>
       </section>
+
+      {/* ── Application Modal ── */}
+      <AnimatePresence>
+        {applying && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+            onClick={(e) => { if (e.target === e.currentTarget) setApplying(null); }}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.2 }}
+              className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-[#34699A]/40 bg-[#0E2D4A] p-6 shadow-2xl"
+            >
+              <ApplicationForm
+                jobTitle={applying.title}
+                jobTeam={applying.team}
+                onClose={() => setApplying(null)}
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

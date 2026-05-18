@@ -317,3 +317,110 @@ export async function sendBookingCancellation({
     `,
   });
 }
+
+// ── 4. Job Application Confirmation ───────────────────────────────────────────
+export async function sendApplicationConfirmation({
+  to,
+  applicantName,
+  jobTitle,
+  jobTeam,
+  applicationId,
+}: {
+  to: string;
+  applicantName: string;
+  jobTitle: string;
+  jobTeam: string;
+  applicationId: string;
+}) {
+  await resend.emails.send({
+    from: FROM_EMAIL,
+    to: resolveRecipient(to),
+    bcc: ADMIN_EMAIL,
+    subject: `Application Received — ${jobTitle} at VeloRent`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head><meta charset="utf-8" /><title>Application Received</title></head>
+        <body style="${baseStyles}">
+          <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+            ${header}
+
+            <!-- Status banner -->
+            <div style="background: rgba(253,245,170,0.08); border: 1px solid rgba(253,245,170,0.2); border-radius: 12px; padding: 16px 20px; margin-bottom: 24px;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 10px; height: 10px; border-radius: 50%; background: #FDF5AA; flex-shrink: 0;"></div>
+                <div>
+                  <p style="margin: 0; font-weight: 700; color: #FDF5AA; font-size: 14px; letter-spacing: 1px;">APPLICATION RECEIVED</p>
+                  <p style="margin: 4px 0 0; color: #aaa; font-size: 13px;">We'll be in touch within 5–7 business days.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Main card -->
+            <div style="background: #113F67; border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 32px; margin-bottom: 24px;">
+              <p style="color: #aaa; margin: 0 0 4px; font-size: 13px;">Hi ${applicantName},</p>
+              <h2 style="color: #ffffff; font-size: 22px; margin: 0 0 12px; font-weight: 700;">
+                Thanks for applying!
+              </h2>
+              <p style="color: #aaa; font-size: 14px; line-height: 1.7; margin: 0 0 24px;">
+                We've received your application for the <strong style="color: #fff;">${jobTitle}</strong> role
+                on the <strong style="color: #fff;">${jobTeam}</strong> team. Our hiring team will review
+                your application and get back to you soon.
+              </p>
+
+              <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 24px;">
+                <table style="width: 100%; border-collapse: collapse;">
+                  <tr>
+                    <td style="padding: 10px 0; color: #666; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.04);">Application ID</td>
+                    <td style="padding: 10px 0; color: #fff; font-size: 14px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.04); font-family: monospace;">#${applicationId.slice(-8).toUpperCase()}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 10px 0; color: #666; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.04);">Role</td>
+                    <td style="padding: 10px 0; color: #fff; font-size: 14px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.04);">${jobTitle}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 10px 0; color: #666; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.04);">Team</td>
+                    <td style="padding: 10px 0; color: #fff; font-size: 14px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.04);">${jobTeam}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 10px 0; color: #666; font-size: 14px;">Status</td>
+                    <td style="padding: 10px 0; text-align: right;">
+                      <span style="background: rgba(253,245,170,0.1); color: #FDF5AA; border: 1px solid rgba(253,245,170,0.2); border-radius: 20px; padding: 3px 12px; font-size: 12px; font-weight: 600;">PENDING REVIEW</span>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+            <!-- What happens next -->
+            <div style="background: rgba(88,160,200,0.05); border: 1px solid rgba(88,160,200,0.15); border-radius: 12px; padding: 20px 24px; margin-bottom: 24px;">
+              <p style="color: #58A0C8; font-size: 13px; font-weight: 700; margin: 0 0 14px; text-transform: uppercase; letter-spacing: 1px;">What happens next?</p>
+              <div style="space-y: 10px;">
+                <div style="display: flex; gap: 12px; margin-bottom: 10px;">
+                  <span style="color: #FDF5AA; font-weight: 700; font-size: 14px; flex-shrink: 0;">01</span>
+                  <p style="color: #aaa; font-size: 14px; margin: 0; line-height: 1.6;">Our team reviews your application and CV — usually within 5–7 business days.</p>
+                </div>
+                <div style="display: flex; gap: 12px; margin-bottom: 10px;">
+                  <span style="color: #FDF5AA; font-weight: 700; font-size: 14px; flex-shrink: 0;">02</span>
+                  <p style="color: #aaa; font-size: 14px; margin: 0; line-height: 1.6;">If shortlisted, we'll reach out to schedule an initial call.</p>
+                </div>
+                <div style="display: flex; gap: 12px;">
+                  <span style="color: #FDF5AA; font-weight: 700; font-size: 14px; flex-shrink: 0;">03</span>
+                  <p style="color: #aaa; font-size: 14px; margin: 0; line-height: 1.6;">Either way, we'll let you know our decision by email.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer note -->
+            <p style="color: #555; font-size: 13px; text-align: center; margin: 0 0 32px; line-height: 1.6;">
+              Questions? Reply to this email or reach us at
+              <a href="mailto:careers@velorent.com" style="color: #58A0C8; text-decoration: none;">careers@velorent.com</a>
+            </p>
+
+            ${footer}
+          </div>
+        </body>
+      </html>
+    `,
+  });
+}
