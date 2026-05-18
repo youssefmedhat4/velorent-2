@@ -1,5 +1,7 @@
 import { z } from "zod";
-import { BookingStatus } from "@prisma/client";
+
+// Plain string enums — no @prisma/client import
+const bookingStatusValues = ["PENDING", "CONFIRMED", "ACTIVE", "COMPLETED", "CANCELLED"] as const;
 
 export const createBookingSchema = z
   .object({
@@ -20,7 +22,7 @@ export const createBookingSchema = z
   });
 
 export const updateBookingSchema = z.object({
-  status: z.nativeEnum(BookingStatus).optional(),
+  status: z.enum(bookingStatusValues).optional(),
   notes: z.string().max(500).optional(),
 });
 
