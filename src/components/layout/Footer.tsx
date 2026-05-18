@@ -10,17 +10,11 @@ const footerLinks = {
     { label: "Press", href: "/press" },
     { label: "Blog", href: "/blog" },
   ],
-  Services: [
-    { label: "Browse Cars", href: "/cars" },
-    { label: "Long-term Rental", href: "#" },
-    { label: "Corporate", href: "#" },
-    { label: "Airport Pickup", href: "#" },
-  ],
   Support: [
-    { label: "Help Center", href: "#" },
-    { label: "Contact Us", href: "#" },
-    { label: "Privacy Policy", href: "#" },
-    { label: "Terms of Service", href: "#" },
+    { label: "Help Center", href: "/help" },
+    { label: "Contact Us", href: "/contact" },
+    { label: "Privacy Policy", href: "/privacy" },
+    { label: "Terms of Service", href: "/terms" },
   ],
 };
 
@@ -35,7 +29,7 @@ export function Footer() {
   return (
     <footer className="border-t border-white/5 bg-[#0B2540]">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-5">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
           {/* Brand */}
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center gap-2">
