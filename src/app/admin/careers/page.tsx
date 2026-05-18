@@ -21,7 +21,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { formatDate, getInitials } from "@/lib/utils";
-import { ApplicationStatus } from "@prisma/client";
+
+type ApplicationStatus = "PENDING" | "REVIEWING" | "SHORTLISTED" | "REJECTED" | "HIRED";
 
 interface JobApplication {
   id: string;
@@ -41,13 +42,7 @@ interface JobApplication {
   user?: { id: string; name: string; email: string; avatar?: string | null } | null;
 }
 
-const statusOptions: ApplicationStatus[] = [
-  "PENDING",
-  "REVIEWING",
-  "SHORTLISTED",
-  "REJECTED",
-  "HIRED",
-];
+const statusOptions: ApplicationStatus[] = ["PENDING", "REVIEWING", "SHORTLISTED", "REJECTED", "HIRED"];
 
 const statusStyles: Record<ApplicationStatus, string> = {
   PENDING: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",

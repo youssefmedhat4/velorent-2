@@ -12,9 +12,22 @@ import { Label } from "@/components/ui/label";
 import { carSchema } from "@/validations/car.schema";
 import { showToast } from "@/components/shared/Toast";
 import type { CarInput } from "@/validations/car.schema";
-import { CarCategory, Transmission, FuelType } from "@prisma/client";
 import type { CarWithRelations } from "@/types";
 import Image from "next/image";
+
+// Define enums locally — avoids importing @prisma/client in a Client Component
+const CarCategory = {
+  ECONOMY: "ECONOMY", COMPACT: "COMPACT", SUV: "SUV",
+  LUXURY: "LUXURY", SPORTS: "SPORTS", VAN: "VAN", ELECTRIC: "ELECTRIC",
+} as const;
+
+const Transmission = {
+  AUTOMATIC: "AUTOMATIC", MANUAL: "MANUAL",
+} as const;
+
+const FuelType = {
+  PETROL: "PETROL", DIESEL: "DIESEL", HYBRID: "HYBRID", ELECTRIC: "ELECTRIC",
+} as const;
 
 interface CarFormProps {
   car?: CarWithRelations;

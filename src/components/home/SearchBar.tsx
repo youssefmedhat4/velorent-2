@@ -4,11 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { MapPin, Calendar, Car, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CarCategory } from "@prisma/client";
 import { buildQueryString } from "@/lib/utils";
 import { format } from "date-fns";
 
-const categories = ["All", ...Object.values(CarCategory)];
+const categories = ["All", "ECONOMY", "COMPACT", "SUV", "LUXURY", "SPORTS", "VAN", "ELECTRIC"];
 
 export function SearchBar() {
   const router = useRouter();

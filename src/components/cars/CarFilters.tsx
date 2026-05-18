@@ -5,11 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { cn, formatCurrency } from "@/lib/utils";
 import { SlidersHorizontal, X } from "lucide-react";
-import { CarCategory, Transmission, FuelType } from "@prisma/client";
 
-const categories = Object.values(CarCategory);
-const transmissions = Object.values(Transmission);
-const fuelTypes = Object.values(FuelType);
+const CarCategory = ["ECONOMY","COMPACT","SUV","LUXURY","SPORTS","VAN","ELECTRIC"] as const;
+const Transmission = ["AUTOMATIC","MANUAL"] as const;
+const FuelType = ["PETROL","DIESEL","HYBRID","ELECTRIC"] as const;
+
+const categories = [...CarCategory];
+const transmissions = [...Transmission];
+const fuelTypes = [...FuelType];
 const seatOptions = [2, 4, 5, 7, 8];
 
 interface CarFiltersProps {

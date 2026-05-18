@@ -8,15 +8,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, formatDate, getStatusColor } from "@/lib/utils";
 import type { BookingWithRelations } from "@/types";
-import type { BookingStatus } from "@prisma/client";
 
-const statusOptions: BookingStatus[] = [
-  "PENDING",
-  "CONFIRMED",
-  "ACTIVE",
-  "COMPLETED",
-  "CANCELLED",
-];
+type BookingStatus = "PENDING" | "CONFIRMED" | "ACTIVE" | "COMPLETED" | "CANCELLED";
+
+const statusOptions: BookingStatus[] = ["PENDING", "CONFIRMED", "ACTIVE", "COMPLETED", "CANCELLED"];
 
 export default function AdminBookingsPage() {
   const [bookings, setBookings] = useState<BookingWithRelations[]>([]);
