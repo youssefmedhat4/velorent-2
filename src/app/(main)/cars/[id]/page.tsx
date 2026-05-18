@@ -69,7 +69,7 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
 
   const averageRating =
     car.reviews.length > 0
-      ? car.reviews.reduce((sum, r) => sum + r.rating, 0) / car.reviews.length
+      ? car.reviews.reduce((sum: number, review) => sum + review.rating, 0) / car.reviews.length
       : 0;
 
   const specs = [
