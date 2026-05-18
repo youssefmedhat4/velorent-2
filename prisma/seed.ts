@@ -1,12 +1,5 @@
-import {
-  PrismaClient,
-  CarCategory,
-  Transmission,
-  FuelType,
-  BookingStatus,
-  PaymentStatus,
-  DiscountType,
-} from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+import type { CarCategory, Transmission, FuelType, BookingStatus, PaymentStatus, DiscountType } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
 import { addDays, subDays } from "date-fns";
