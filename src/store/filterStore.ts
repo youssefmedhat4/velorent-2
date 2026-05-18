@@ -1,7 +1,7 @@
 "use client";
 
 import { create } from "zustand";
-import type { CarCategory, Transmission, FuelType } from "@prisma/client";
+import type { CarCategory, Transmission, FuelType } from "@/types";
 
 interface FilterState {
   category: CarCategory | null;

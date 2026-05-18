@@ -10,7 +10,8 @@ import { signOut, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn, getInitials } from "@/lib/utils";
-import type { UserRole } from "@prisma/client";
+
+type UserRole = "USER" | "ADMIN";
 
 const navLinks = [
   { href: "/cars", label: "Browse Cars" },

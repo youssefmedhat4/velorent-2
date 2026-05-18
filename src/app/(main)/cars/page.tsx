@@ -9,7 +9,8 @@ import { useCars } from "@/hooks/useCars";
 import { useFilterStore } from "@/store/filterStore";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
-import type { CarCategory } from "@prisma/client";
+
+type CarCategory = "ECONOMY" | "COMPACT" | "SUV" | "LUXURY" | "SPORTS" | "VAN" | "ELECTRIC";
 
 const sortOptions = [
   { value: "newest", label: "Newest" },

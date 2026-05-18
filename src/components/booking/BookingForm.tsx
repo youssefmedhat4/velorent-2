@@ -26,7 +26,8 @@ import { useBookedDates } from "@/hooks/useBooking";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useWishlistDraft } from "@/contexts/WishlistDraftContext";
 import type { CarWithRelations, PromoPreview, WishlistDraft } from "@/types";
-import type { Location } from "@prisma/client";
+
+type Location = { id: string; name: string; address: string; city: string; latitude: number; longitude: number; createdAt: Date };
 
 interface BookingFormValues {
   startDate: Date | undefined;

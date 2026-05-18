@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import { MapPin, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { Location } from "@prisma/client";
+
+type Location = { id: string; name: string; address: string; city: string; latitude: number; longitude: number; createdAt: Date };
 
 interface LocationPickerProps {
   locations: Location[];

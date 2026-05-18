@@ -6,7 +6,8 @@ import { Search, Loader2, Shield, User } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDate, getInitials } from "@/lib/utils";
-import type { UserRole } from "@prisma/client";
+
+type UserRole = "USER" | "ADMIN";
 
 interface AdminUser {
   id: string;

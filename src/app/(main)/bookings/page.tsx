@@ -8,8 +8,9 @@ import { useBookings } from "@/hooks/useBooking";
 import { showToast } from "@/components/shared/Toast";
 import { cn } from "@/lib/utils";
 import { Clock, Zap, CheckCircle2, XCircle } from "lucide-react";
-import type { BookingStatus } from "@prisma/client";
 import type { BookingWithRelations } from "@/types";
+
+type BookingStatus = "PENDING" | "CONFIRMED" | "ACTIVE" | "COMPLETED" | "CANCELLED";
 
 const tabs: {
   value: string;

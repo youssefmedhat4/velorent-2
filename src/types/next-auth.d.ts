@@ -1,4 +1,4 @@
-import type { UserRole } from "@prisma/client";
+import type { UserRole } from "@/types/enums";
 import "next-auth";
 
 declare module "next-auth" {
