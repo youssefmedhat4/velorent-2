@@ -4,9 +4,6 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   allowedDevOrigins: ["192.168.100.134", "192.168.100.221"],
   serverExternalPackages: ["bcryptjs"],
   turbopack: {},
