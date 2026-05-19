@@ -55,7 +55,28 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Send confirmation email to applicant — fire and forget
+    // Send admin alert email first (most important), then applicant confirmation
+    try {
+      await sendAdminApplicationAlert({
+        applicantName: parsed.data.fullName,
+        applicantEmail: parsed.data.email,
+        applicantPhone: parsed.data.phone,
+        jobTitle: parsed.data.jobTitle,
+        jobTeam: parsed.data.jobTeam,
+        linkedIn: parsed.data.linkedIn,
+        portfolio: parsed.data.portfolio,
+        coverLetter: parsed.data.coverLetter,
+        cvUrl: parsed.data.cvUrl,
+        cvFileName: parsed.data.cvFileName,
+        applicationId: application.id,
+      });
+    } catch (err) {
+      console.error("[ADMIN_APPLICATION_EMAIL]", err);
+    }
+
+    // Send confirmation email to applicant — only if they're a verified recipient
+    // (on Resend free plan with onboarding@resend.dev, only verified emails receive)
+    // In production with a real domain this works for everyone
     sendApplicationConfirmation({
       to: parsed.data.email,
       applicantName: parsed.data.fullName,
@@ -63,21 +84,6 @@ export async function POST(req: NextRequest) {
       jobTeam: parsed.data.jobTeam,
       applicationId: application.id,
     }).catch((err) => console.error("[APPLICATION_EMAIL]", err));
-
-    // Send admin alert email — fire and forget
-    sendAdminApplicationAlert({
-      applicantName: parsed.data.fullName,
-      applicantEmail: parsed.data.email,
-      applicantPhone: parsed.data.phone,
-      jobTitle: parsed.data.jobTitle,
-      jobTeam: parsed.data.jobTeam,
-      linkedIn: parsed.data.linkedIn,
-      portfolio: parsed.data.portfolio,
-      coverLetter: parsed.data.coverLetter,
-      cvUrl: parsed.data.cvUrl,
-      cvFileName: parsed.data.cvFileName,
-      applicationId: application.id,
-    }).catch((err) => console.error("[ADMIN_APPLICATION_EMAIL]", err));
 
     return NextResponse.json({ success: true, data: { id: application.id } }, { status: 201 });
   } catch (error) {
