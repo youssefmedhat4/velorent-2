@@ -148,12 +148,12 @@ export default function AdminCareersPage() {
   }));
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-full flex-col lg:flex-row">
       {/* ── Left: List ── */}
       <div className={`flex flex-col ${selected ? "hidden lg:flex lg:w-1/2 xl:w-3/5" : "w-full"} border-r border-[#34699A]/20`}>
         {/* Header */}
-        <div className="border-b border-[#34699A]/20 p-6">
-          <h1 className="font-display text-3xl font-black uppercase text-white">
+        <div className="border-b border-[#34699A]/20 p-4 sm:p-6">
+          <h1 className="font-display text-2xl sm:text-3xl font-black uppercase text-white">
             Candidates
           </h1>
           <p className="mt-1 text-sm text-slate-400">{pagination.total} total applications</p>
@@ -260,6 +260,14 @@ export default function AdminCareersPage() {
             {/* Detail header */}
             <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[#34699A]/20 bg-[#0B2540] p-4">
               <div className="flex items-center gap-3">
+                {/* Back button — mobile only */}
+                <button
+                  onClick={() => setSelected(null)}
+                  className="rounded-lg p-1.5 text-slate-400 hover:bg-white/5 hover:text-white transition-colors lg:hidden"
+                  aria-label="Back to list"
+                >
+                  <X className="h-5 w-5 rotate-180" />
+                </button>
                 <Avatar className="h-10 w-10">
                   <AvatarFallback className="bg-[#34699A] text-white font-bold">
                     {getInitials(selected.fullName)}
@@ -282,13 +290,6 @@ export default function AdminCareersPage() {
                   ) : (
                     <Trash2 className="h-4 w-4" />
                   )}
-                </button>
-                <button
-                  onClick={() => setSelected(null)}
-                  className="rounded-lg p-2 text-slate-500 hover:bg-white/5 hover:text-white transition-colors lg:hidden"
-                  aria-label="Close"
-                >
-                  <X className="h-4 w-4" />
                 </button>
               </div>
             </div>

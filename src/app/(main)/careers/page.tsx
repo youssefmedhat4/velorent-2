@@ -104,7 +104,7 @@ export default function CareersPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="font-display text-6xl font-black uppercase leading-none tracking-tight text-white sm:text-7xl lg:text-8xl"
+            className="font-display text-5xl font-black uppercase leading-none tracking-tight text-white sm:text-7xl lg:text-8xl"
           >
             Build the
             <br />
@@ -303,15 +303,15 @@ export default function CareersPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-end justify-center p-0 bg-black/70 backdrop-blur-sm sm:items-center sm:p-4"
             onClick={(e) => { if (e.target === e.currentTarget) setApplying(null); }}
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ duration: 0.2 }}
-              className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-[#34699A]/40 bg-[#0E2D4A] p-6 shadow-2xl"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 40 }}
+              transition={{ duration: 0.25 }}
+              className="w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-t-2xl border border-[#34699A]/40 bg-[#0E2D4A] p-5 shadow-2xl sm:rounded-2xl sm:p-6"
             >
               <ApplicationForm
                 jobTitle={applying.title}

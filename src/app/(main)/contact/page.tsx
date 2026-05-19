@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, Clock, Loader2, CheckCircle2, MessageCircle } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, Loader2, CheckCircle2, MessageCircle, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -61,6 +61,7 @@ const categories = [
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
     register,
@@ -72,11 +73,19 @@ export default function ContactPage() {
   });
 
   const onSubmit = async (data: FormValues) => {
-    // In production this would POST to an API route that sends via Resend
-    // For now simulate a short delay
-    await new Promise((r) => setTimeout(r, 1000));
-    console.log("Contact form:", data);
-    setSubmitted(true);
+    try {
+      setSubmitError(null);
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const result = await res.json();
+      if (!result.success) throw new Error(result.error ?? "Failed to send message");
+      setSubmitted(true);
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    }
   };
 
   return (
@@ -171,7 +180,7 @@ export default function ContactPage() {
                     </p>
                   </div>
                   <button
-                    onClick={() => setSubmitted(false)}
+                    onClick={() => { setSubmitted(false); setSubmitError(null); }}
                     className="mt-2 text-sm text-[#58A0C8] hover:text-white transition-colors"
                   >
                     Send another message
@@ -254,6 +263,13 @@ export default function ContactPage() {
                         "Send Message"
                       )}
                     </Button>
+
+                    {submitError && (
+                      <div className="flex items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2">
+                        <AlertCircle className="h-4 w-4 shrink-0 text-red-400" />
+                        <p className="text-sm text-red-400">{submitError}</p>
+                      </div>
+                    )}
 
                     <p className="text-center text-xs text-slate-600">
                       We typically respond within 24 hours on business days.

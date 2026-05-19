@@ -8,13 +8,12 @@ const globalForPrisma = globalThis as unknown as {
 function createPrismaClient() {
   const connectionString = process.env.DATABASE_URL;
 
-  if (!connectionString) {
-    // During build time without a DB, return a client that will fail gracefully
-    console.warn("DATABASE_URL is not set");
-  }
-
+  // During `next build`, Prisma client is instantiated but never actually
+  // connects to the DB (static pages don't run DB queries at build time).
+  // We allow the client to be created without a URL — it will throw at
+  // runtime if a query is attempted without DATABASE_URL set.
   const adapter = new PrismaPg({
-    connectionString: connectionString ?? "postgresql://localhost:5432/velorent",
+    connectionString: connectionString ?? "postgresql://localhost:5432/placeholder",
   });
 
   return new PrismaClient({

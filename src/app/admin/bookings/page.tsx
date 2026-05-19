@@ -53,9 +53,9 @@ export default function AdminBookingsPage() {
   );
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="font-display text-4xl font-black uppercase text-white">
+    <div className="p-4 sm:p-8">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="font-display text-3xl sm:text-4xl font-black uppercase text-white">
           Bookings
         </h1>
         <p className="mt-1 text-sm text-slate-400">{bookings.length} total bookings</p>

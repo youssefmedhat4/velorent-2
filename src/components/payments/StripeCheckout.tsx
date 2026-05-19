@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Loader2, CheckCircle2, CreditCard, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ interface StripeCheckoutProps {
 }
 
 export function StripeCheckout({ bookingId, totalPrice, onSuccess }: StripeCheckoutProps) {
+  const router = useRouter();
   const [processing, setProcessing] = useState(false);
   const [succeeded, setSucceeded] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,8 +37,11 @@ export function StripeCheckout({ bookingId, totalPrice, onSuccess }: StripeCheck
       }
 
       setSucceeded(true);
-      // Short delay so the user sees the success state before the modal closes
-      setTimeout(() => onSuccess(), 1200);
+      // Redirect to payment success page after a short delay so user sees the success state
+      setTimeout(() => {
+        onSuccess();
+        router.push(`/payment/success?bookingId=${bookingId}`);
+      }, 1200);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Payment failed");
     } finally {

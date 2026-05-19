@@ -61,9 +61,9 @@ export default function AdminUsersPage() {
   );
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="font-display text-4xl font-black uppercase text-white">
+    <div className="p-4 sm:p-8">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="font-display text-3xl sm:text-4xl font-black uppercase text-white">
           Users
         </h1>
         <p className="mt-1 text-sm text-slate-400">{users.length} registered users</p>
@@ -85,7 +85,8 @@ export default function AdminUsersPage() {
         </div>
       ) : (
         <div className="overflow-hidden rounded-2xl border border-white/5">
-          <table className="w-full">
+          <div className="overflow-x-auto">
+          <table className="w-full min-w-[560px]">
             <thead>
               <tr className="border-b border-white/5 bg-white/5">
                 {["User", "Role", "Bookings", "Joined", "Actions"].map((h) => (
@@ -166,6 +167,7 @@ export default function AdminUsersPage() {
           {filtered.length === 0 && (
             <div className="py-16 text-center text-slate-400">No users found</div>
           )}
+          </div>
         </div>
       )}
     </div>

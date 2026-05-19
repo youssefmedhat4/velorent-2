@@ -45,10 +45,10 @@ export default function AdminCarsPage() {
   );
 
   return (
-    <div className="p-8">
-      <div className="mb-8 flex items-center justify-between">
+    <div className="p-4 sm:p-8">
+      <div className="mb-6 sm:mb-8 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="font-display text-4xl font-black uppercase text-white">
+          <h1 className="font-display text-3xl sm:text-4xl font-black uppercase text-white">
             Cars
           </h1>
           <p className="mt-1 text-sm text-slate-400">{cars.length} vehicles in fleet</p>
@@ -78,7 +78,8 @@ export default function AdminCarsPage() {
         </div>
       ) : (
         <div className="overflow-hidden rounded-2xl border border-white/5">
-          <table className="w-full">
+          <div className="overflow-x-auto">
+          <table className="w-full min-w-[480px]">
             <thead>
               <tr className="border-b border-white/5 bg-white/5">
                 <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-400">
@@ -181,6 +182,7 @@ export default function AdminCarsPage() {
               No cars found
             </div>
           )}
+          </div>
         </div>
       )}
     </div>

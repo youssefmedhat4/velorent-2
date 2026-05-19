@@ -100,7 +100,7 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           {/* Left: 3D Viewer */}
           <div className="space-y-4">
-            <div className="h-[480px]">
+            <div className="h-[320px] sm:h-[400px] lg:h-[480px]">
               <Car3DViewer
                 modelUrl={car.modelUrl}
                 images={car.images}
@@ -130,10 +130,10 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
                 </div>
                 <CarDetailHeader carId={car.id} />
               </div>
-              <h1 className="font-display text-4xl font-black uppercase text-white">
+              <h1 className="font-display text-3xl sm:text-4xl font-black uppercase text-white">
                 {car.name}
               </h1>
-              <p className="mt-1 text-lg text-zinc-400">
+              <p className="mt-1 text-base text-zinc-400">
                 {car.brand} · {car.model} · {car.year}
               </p>
 

@@ -5,8 +5,8 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   allowedDevOrigins: ["192.168.100.134", "192.168.100.221"],
-  serverExternalPackages: ["bcryptjs"],
-  turbopack: {},
+  // These packages use native Node.js bindings and must not be bundled by webpack
+  serverExternalPackages: ["bcryptjs", "pg", "@prisma/adapter-pg"],
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
@@ -14,6 +14,8 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "lh3.googleusercontent.com" },
       { protocol: "https", hostname: "avatars.githubusercontent.com" },
       { protocol: "https", hostname: "*.cloudinary.com" },
+      // Vercel Blob storage URLs
+      { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
     ],
     dangerouslyAllowSVG: true,
     contentDispositionType: "attachment",

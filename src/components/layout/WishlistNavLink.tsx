@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useWishlist } from "@/hooks/useWishlist";
 
@@ -26,7 +25,6 @@ export function WishlistNavLink({ className, onClick }: WishlistNavLinkProps) {
         className
       )}
     >
-      <Heart className={cn("h-4 w-4", isActive && "fill-[#FDF5AA]")} />
       Wishlist
       {count > 0 && (
         <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#FDF5AA] px-1.5 text-xs font-bold text-black">

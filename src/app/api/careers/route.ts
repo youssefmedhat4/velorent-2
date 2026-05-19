@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
-import { sendApplicationConfirmation } from "@/lib/resend";
+import { sendApplicationConfirmation, sendAdminApplicationAlert } from "@/lib/resend";
 
 const createApplicationSchema = z.object({
   fullName: z.string().min(2, "Full name is required"),
@@ -13,7 +13,7 @@ const createApplicationSchema = z.object({
   jobTitle: z.string().min(1, "Job title is required"),
   jobTeam: z.string().min(1, "Job team is required"),
   coverLetter: z.string().max(3000).optional(),
-  cvUrl: z.string().url("CV upload failed — please try again"),
+  cvUrl: z.string().min(1, "CV upload failed — please try again"),
   cvFileName: z.string().min(1),
 });
 
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Send confirmation email — fire and forget, don't fail the request if email fails
+    // Send confirmation email to applicant — fire and forget
     sendApplicationConfirmation({
       to: parsed.data.email,
       applicantName: parsed.data.fullName,
@@ -63,6 +63,21 @@ export async function POST(req: NextRequest) {
       jobTeam: parsed.data.jobTeam,
       applicationId: application.id,
     }).catch((err) => console.error("[APPLICATION_EMAIL]", err));
+
+    // Send admin alert email — fire and forget
+    sendAdminApplicationAlert({
+      applicantName: parsed.data.fullName,
+      applicantEmail: parsed.data.email,
+      applicantPhone: parsed.data.phone,
+      jobTitle: parsed.data.jobTitle,
+      jobTeam: parsed.data.jobTeam,
+      linkedIn: parsed.data.linkedIn,
+      portfolio: parsed.data.portfolio,
+      coverLetter: parsed.data.coverLetter,
+      cvUrl: parsed.data.cvUrl,
+      cvFileName: parsed.data.cvFileName,
+      applicationId: application.id,
+    }).catch((err) => console.error("[ADMIN_APPLICATION_EMAIL]", err));
 
     return NextResponse.json({ success: true, data: { id: application.id } }, { status: 201 });
   } catch (error) {

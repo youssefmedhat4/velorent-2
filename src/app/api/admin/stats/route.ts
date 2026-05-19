@@ -3,6 +3,9 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { startOfMonth, endOfMonth, subMonths } from "date-fns";
 
+// Vercel Pro: 60s. Hobby: 10s. This route runs 15 DB queries — give it room.
+export const maxDuration = 30;
+
 export async function GET(_req: NextRequest) {
   try {
     const session = await auth();
@@ -18,6 +21,7 @@ export async function GET(_req: NextRequest) {
     const monthEnd = endOfMonth(now);
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
+    // Run all 9 scalar queries in parallel
     const [
       totalRevenue,
       monthlyRevenue,
@@ -34,28 +38,19 @@ export async function GET(_req: NextRequest) {
         _sum: { amount: true },
       }),
       prisma.payment.aggregate({
-        where: {
-          status: "PAID",
-          paidAt: { gte: monthStart, lte: monthEnd },
-        },
+        where: { status: "PAID", paidAt: { gte: monthStart, lte: monthEnd } },
         _sum: { amount: true },
       }),
       prisma.booking.count(),
-      prisma.booking.count({
-        where: { createdAt: { gte: today } },
-      }),
-      prisma.booking.count({
-        where: { status: "ACTIVE" },
-      }),
+      prisma.booking.count({ where: { createdAt: { gte: today } } }),
+      prisma.booking.count({ where: { status: "ACTIVE" } }),
       prisma.car.count(),
       prisma.car.count({ where: { available: true } }),
       prisma.user.count({ where: { role: "USER" } }),
-      prisma.user.count({
-        where: { createdAt: { gte: monthStart }, role: "USER" },
-      }),
+      prisma.user.count({ where: { createdAt: { gte: monthStart }, role: "USER" } }),
     ]);
 
-    // Monthly revenue for last 6 months
+    // Monthly revenue — 6 queries in parallel (already fast, kept parallel)
     const revenueData = await Promise.all(
       Array.from({ length: 6 }, (_, i) => {
         const date = subMonths(now, 5 - i);

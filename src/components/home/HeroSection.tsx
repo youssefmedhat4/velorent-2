@@ -171,7 +171,7 @@ export function HeroSection() {
       >
         <Canvas
           camera={{ position: [5, 2, 5], fov: 40 }}
-          shadows
+          shadows="soft"
           gl={{ antialias: true, alpha: true }}
         >
           <Scene autoRotate={autoRotate} />

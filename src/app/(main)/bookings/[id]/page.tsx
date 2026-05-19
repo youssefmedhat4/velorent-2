@@ -170,7 +170,7 @@ export default function BookingDetailPage({ params }: BookingDetailPageProps) {
 
             {/* Car Info */}
             <div className="overflow-hidden rounded-2xl border border-white/5 bg-[#111113]">
-              <div className="relative h-48">
+              <div className="relative h-40 sm:h-48">
                 <Image
                   src={image}
                   alt={car?.name ?? "Car"}
@@ -179,11 +179,11 @@ export default function BookingDetailPage({ params }: BookingDetailPageProps) {
                   sizes="(max-width: 768px) 100vw, 66vw"
                 />
               </div>
-              <div className="p-5">
+              <div className="p-4 sm:p-5">
                 <p className="text-xs text-zinc-500">{car?.brand}</p>
                 <h2 className="text-xl font-bold text-white">{car?.name}</h2>
 
-                <div className="mt-4 grid grid-cols-2 gap-4">
+                <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <div className="flex items-start gap-2">
                     <CalendarDays className="mt-0.5 h-4 w-4 shrink-0 text-zinc-500" />
                     <div>
@@ -232,10 +232,10 @@ export default function BookingDetailPage({ params }: BookingDetailPageProps) {
             )}
           </div>
 
-          {/* Sidebar */}
+          {/* Sidebar — stacks below on mobile, beside on lg */}
           <div className="space-y-4">
             {/* Payment Summary */}
-            <div className="rounded-2xl border border-white/5 bg-[#111113] p-5">
+            <div className="rounded-2xl border border-white/5 bg-[#111113] p-4 sm:p-5">
               <h3 className="mb-4 font-semibold text-white">Payment Summary</h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">

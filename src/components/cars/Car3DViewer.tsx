@@ -52,7 +52,7 @@ export function Car3DViewer({ modelUrl, images = [], carName }: Car3DViewerProps
     <div className="relative h-full w-full min-h-[400px] rounded-2xl overflow-hidden bg-gradient-to-b from-zinc-900 to-zinc-950">
       <Canvas
         camera={{ position: [4, 2, 4], fov: 45 }}
-        shadows
+        shadows="soft"
         gl={{ antialias: true, alpha: true }}
         className="h-full w-full"
       >

@@ -39,22 +39,22 @@ function StatCard({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
-      className="rounded-2xl border border-white/5 bg-[#113F67] p-6"
+      className="rounded-2xl border border-white/5 bg-[#113F67] p-4 sm:p-6"
     >
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-wider text-slate-400">
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <p className="text-xs font-medium uppercase tracking-wider text-slate-400 truncate">
             {title}
           </p>
-          <p className="mt-2 text-3xl font-bold text-white">{value}</p>
-          {subtitle && <p className="mt-1 text-xs text-slate-400">{subtitle}</p>}
+          <p className="mt-1.5 text-2xl sm:text-3xl font-bold text-white truncate">{value}</p>
+          {subtitle && <p className="mt-1 text-xs text-slate-400 truncate">{subtitle}</p>}
         </div>
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FDF5AA]/10">
-          <Icon className="h-5 w-5 text-[#FDF5AA]" />
+        <div className="flex h-8 w-8 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl bg-[#FDF5AA]/10">
+          <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-[#FDF5AA]" />
         </div>
       </div>
       {trend && (
-        <div className="mt-4 flex items-center gap-1 text-xs text-green-400">
+        <div className="mt-3 flex items-center gap-1 text-xs text-green-400">
           <ArrowUpRight className="h-3 w-3" />
           {trend}
         </div>
@@ -78,10 +78,10 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="p-8">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="p-4 sm:p-8">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-5">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="h-32 animate-pulse rounded-2xl bg-[#0E2D4A]" />
+            <div key={i} className="h-28 sm:h-32 animate-pulse rounded-2xl bg-[#0E2D4A]" />
           ))}
         </div>
       </div>
@@ -124,9 +124,9 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="font-display text-4xl font-black uppercase text-white">
+    <div className="p-4 sm:p-8">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="font-display text-3xl sm:text-4xl font-black uppercase text-white">
           Dashboard
         </h1>
         <p className="mt-1 text-sm text-slate-400">
@@ -135,7 +135,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 mb-8">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-5 mb-6 sm:mb-8">
         {kpis.map((kpi, i) => (
           <StatCard key={kpi.title} {...kpi} index={i} />
         ))}
