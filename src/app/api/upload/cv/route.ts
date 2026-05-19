@@ -1,20 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Storage priority:
-//   1. Vercel Blob  — if BLOB_READ_WRITE_TOKEN is set (free on Vercel, zero config)
-//   2. Cloudinary   — if CLOUDINARY_* keys are set
-//   3. Error        — tell the user to configure storage
-
-const blobConfigured = !!process.env.BLOB_READ_WRITE_TOKEN;
-
-const cloudinaryConfigured =
-  process.env.CLOUDINARY_CLOUD_NAME &&
-  process.env.CLOUDINARY_CLOUD_NAME !== "your_cloud_name" &&
-  process.env.CLOUDINARY_API_KEY &&
-  process.env.CLOUDINARY_API_KEY !== "your_api_key" &&
-  process.env.CLOUDINARY_API_SECRET &&
-  process.env.CLOUDINARY_API_SECRET !== "your_api_secret";
-
 const ALLOWED_TYPES = [
   "application/pdf",
   "application/msword",
@@ -55,41 +40,62 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // ── 1. Vercel Blob (preferred on Vercel — free, zero config) ──────────────
-    if (blobConfigured) {
-      const { put } = await import("@vercel/blob");
-      const blob = await put(`cvs/${Date.now()}_${fileName.replace(/[^a-zA-Z0-9._-]/g, "_")}`, file, {
-        access: "public",
-        contentType: file.type,
-      });
+    // Read env vars fresh inside the function — not at module load time
+    const blobToken = process.env.BLOB_READ_WRITE_TOKEN;
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+    const cloudKey = process.env.CLOUDINARY_API_KEY;
+    const cloudSecret = process.env.CLOUDINARY_API_SECRET;
 
-      return NextResponse.json({
-        success: true,
-        data: { url: blob.url, publicId: blob.pathname, fileName },
-      });
+    const blobConfigured = !!blobToken;
+    const cloudinaryConfigured =
+      !!cloudName && cloudName !== "your_cloud_name" &&
+      !!cloudKey && cloudKey !== "your_api_key" &&
+      !!cloudSecret && cloudSecret !== "your_api_secret";
+
+    // ── 1. Vercel Blob ────────────────────────────────────────────────────────
+    if (blobConfigured) {
+      try {
+        const { put } = await import("@vercel/blob");
+        const safeName = fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
+        const blob = await put(`cvs/${Date.now()}_${safeName}`, file, {
+          access: "public",
+          contentType: file.type,
+          token: blobToken,
+        });
+
+        return NextResponse.json({
+          success: true,
+          data: { url: blob.url, publicId: blob.pathname, fileName },
+        });
+      } catch (blobError) {
+        console.error("[CV_UPLOAD_BLOB]", blobError);
+        // Fall through to Cloudinary if Blob fails
+      }
     }
 
     // ── 2. Cloudinary ─────────────────────────────────────────────────────────
     if (cloudinaryConfigured) {
-      const { cloudinary } = await import("@/lib/cloudinary");
-      const bytes = await file.arrayBuffer();
-      const base64 = `data:${file.type};base64,${Buffer.from(bytes).toString("base64")}`;
+      try {
+        const { cloudinary } = await import("@/lib/cloudinary");
+        const bytes = await file.arrayBuffer();
+        const base64 = `data:${file.type};base64,${Buffer.from(bytes).toString("base64")}`;
 
-      const result = await cloudinary.uploader.upload(base64, {
-        folder: "velorent/cvs",
-        resource_type: "raw",
-        public_id: `cv_${Date.now()}_${fileName.replace(/[^a-zA-Z0-9.]/g, "_")}`,
-      });
+        const result = await cloudinary.uploader.upload(base64, {
+          folder: "velorent/cvs",
+          resource_type: "raw",
+          public_id: `cv_${Date.now()}_${fileName.replace(/[^a-zA-Z0-9.]/g, "_")}`,
+        });
 
-      return NextResponse.json({
-        success: true,
-        data: { url: result.secure_url, publicId: result.public_id, fileName },
-      });
+        return NextResponse.json({
+          success: true,
+          data: { url: result.secure_url, publicId: result.public_id, fileName },
+        });
+      } catch (cloudinaryError) {
+        console.error("[CV_UPLOAD_CLOUDINARY]", cloudinaryError);
+      }
     }
 
-    // ── 3. No storage configured ──────────────────────────────────────────────
-    // In development: return a placeholder so the form flow can be tested.
-    // In production: fail clearly so the issue is obvious.
+    // ── 3. Dev fallback ───────────────────────────────────────────────────────
     if (process.env.NODE_ENV !== "production") {
       return NextResponse.json({
         success: true,
@@ -102,10 +108,12 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // ── 4. Nothing configured ─────────────────────────────────────────────────
+    console.error("[CV_UPLOAD] No storage configured. BLOB_READ_WRITE_TOKEN:", !!blobToken, "Cloudinary:", cloudinaryConfigured);
     return NextResponse.json(
       {
         success: false,
-        error: "File storage is not configured. Add BLOB_READ_WRITE_TOKEN to your Vercel environment variables.",
+        error: "File storage is not configured. Please contact support.",
         code: "STORAGE_NOT_CONFIGURED",
       },
       { status: 503 }
