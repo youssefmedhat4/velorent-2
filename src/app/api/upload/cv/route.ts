@@ -57,10 +57,16 @@ export async function POST(req: NextRequest) {
       try {
         const { put } = await import("@vercel/blob");
         const safeName = fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
-        const blob = await put(`cvs/${Date.now()}_${safeName}`, file, {
+
+        // Read the file as a Buffer — more reliable than passing the File object directly
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+
+        const blob = await put(`cvs/${Date.now()}_${safeName}`, buffer, {
           access: "public",
           contentType: file.type,
           token: blobToken,
+          addRandomSuffix: false,
         });
 
         return NextResponse.json({
